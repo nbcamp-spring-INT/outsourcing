@@ -4,8 +4,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.icomfortableworld.common.entity.Timestamped;
+import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.model.MemberModel;
-import com.icomfortableworld.domain.member.model.MemberRole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,29 +31,47 @@ public class Member extends Timestamped {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberId;
-	@Column(nullable = false, length = 10)
-	private String identity;
-	@Column(nullable = false, length = 20)
+
+	@Column(nullable = false, length = 10, unique = true)
 	private String username;
+
+	@Column(nullable = false, unique = true)
+	private String email;
+
 	@Column(nullable = false, length = 20)
 	private String nickname;
-	@Column(nullable = false, length = 15)
+
+	@Column(nullable = false)
 	private String password;
+
 	@Column(length = 40)
 	private String introduction;
-	@Column(nullable = false, length = 10)
+
+	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
-	private MemberRole memberRole;
+	private MemberRoleEnum memberRoleEnum;
+
+	public static Member of(SignupRequestDto signupRequestDto, String password, MemberRoleEnum memberRoleEnum) {
+		return Member.builder()
+			.username(signupRequestDto.getUsername())
+			.email(signupRequestDto.getEmail())
+			.nickname(signupRequestDto.getNickname())
+			.password(password)
+			.introduction(signupRequestDto.getIntroduction())
+			.memberRoleEnum(memberRoleEnum)
+			.build();
+	}
 
 	public MemberModel toModel() {
 		return MemberModel.builder()
 			.memberId(memberId)
-			.identity(identity)
 			.username(username)
+			.email(email)
 			.nickname(nickname)
 			.password(password)
 			.introduction(introduction)
-			.memberRole(memberRole)
+			.memberRoleEnum(memberRoleEnum)
+			.createdDate(this.getCreatedDate())
 			.build();
 	}
 }
