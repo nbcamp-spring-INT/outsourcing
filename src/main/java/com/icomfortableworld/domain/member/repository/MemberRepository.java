@@ -9,4 +9,12 @@ public interface MemberRepository {
 	Optional<Member> findById(Long memberId);
 
 	Member findByIdOrElseThrow(Long memberId);
+
+	Optional<Member> findByUsername(String username);
+
+	Member findByUsernameOrElseThrow(String username);
+
+	Optional<Member> findByEmail(String email);
+
+	Member save(Member member);
 }

@@ -27,4 +27,26 @@ public class MemberRepositoryImpl implements MemberRepository {
 			() -> new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_NOT_FOUND)
 		);
 	}
+
+	@Override
+	public Optional<Member> findByUsername(String username) {
+		return jpaRepository.findByUsername(username);
+	}
+
+	@Override
+	public Member findByUsernameOrElseThrow(String username) {
+		return findByUsername(username).orElseThrow(
+			() -> new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_NOT_FOUND)
+		);
+	}
+
+	@Override
+	public Optional<Member> findByEmail(String email) {
+		return jpaRepository.findByEmail(email);
+	}
+
+	@Override
+	public Member save(Member member) {
+		return jpaRepository.save(member);
+	}
 }
