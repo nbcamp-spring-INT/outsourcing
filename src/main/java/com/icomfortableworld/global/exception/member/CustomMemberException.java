@@ -1,4 +1,4 @@
-package com.icomfortableworld.global.exception.entity;
+package com.icomfortableworld.global.exception.member;
 
 import org.springframework.http.HttpStatus;
 
