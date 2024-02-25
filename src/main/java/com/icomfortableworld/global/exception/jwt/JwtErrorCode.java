@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum JwtErrorCode {
-	JWT_SIGNATURE_EXCEPTION("Invalid JWT signature"),
-	JWT_EXPIRED_EXCEPTION("JWT token is expired"),
-	UN_SUPPORTED_TOKEN_TYPE_EXCEPTION("Unsupported JWT token type"),
-	INVALID_TOKEN_EXCEPTION("Invalid JWT token");
+	JWT_ERROR_CODE_SIGNATURE_EXCEPTION("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다."),
+	JWT_ERROR_CODE_EXPIRED_EXCEPTION("Expired JWT token, 만료된 JWT token 입니다."),
+	JWT_ERROR_CODE_UNSUPPORTED_TOKEN_EXCEPTION("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다."),
+	JWT_ERROR_CODE_INVALID_TOKEN_EXCEPTION("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
 
 	private final String message;
 
