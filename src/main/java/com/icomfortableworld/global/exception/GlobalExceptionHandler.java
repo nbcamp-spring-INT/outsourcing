@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(CustomMemberException.class)
-	public ResponseEntity<CommonResponseDto<Void>> customEntityExceptionHandler(CustomMemberException e) {
+	public ResponseEntity<CommonResponseDto<Void>> customMemberExceptionHandler(CustomMemberException e) {
 		return CommonResponseDto.of(HttpStatus.BAD_REQUEST, e.getMessage(), null);
 	}
 }
