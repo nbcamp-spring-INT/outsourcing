@@ -22,7 +22,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 
 	@Override
-	public Member findByIdOrElseThrow(Long memberId) throws CustomMemberException {
+	public Member findByIdOrElseThrow(Long memberId) {
 		return findById(memberId).orElseThrow(
 			() -> new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_NOT_FOUND)
 		);
