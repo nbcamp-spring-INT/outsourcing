@@ -1,8 +1,5 @@
 package com.icomfortableworld.global.exception;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -11,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.icomfortableworld.common.dto.CommonResponseDto;
+import com.icomfortableworld.global.exception.dto.ErrorResponseDto;
 import com.icomfortableworld.common.dto.ErrorResponseDto;
 import com.icomfortableworld.global.exception.jwt.CustomJwtException;
 import com.icomfortableworld.global.exception.member.CustomMemberException;
@@ -21,8 +19,8 @@ public class GlobalExceptionHandler {
 	public ErrorResponseDto<List<String>> methodArgumentNotValidException(
 		MethodArgumentNotValidException e) {
 		List<String> errorList = new ArrayList<>();
-		for(FieldError fieldError : e.getBindingResult().getFieldErrors()){
-			errorList.add(fieldError.getDefaultMessage());
+		for (FieldError error : e.getBindingResult().getFieldErrors()) {
+			errorList.add(error.getDefaultMessage());
 		}
 		return ErrorResponseDto.of(HttpStatus.BAD_REQUEST, errorList);
 	}
