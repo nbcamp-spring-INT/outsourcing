@@ -7,12 +7,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.icomfortableworld.domain.member.dto.request.LoginRequestDto;
 import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
+import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
 import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
 import com.icomfortableworld.global.exception.member.CustomMemberException;
 import com.icomfortableworld.global.exception.member.MemberErrorCode;
+import com.icomfortableworld.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final JwtProvider jwtProvider;
 	@Value("${admin_token}")
 	private String adminToken;
 
@@ -54,4 +58,13 @@ public class MemberServiceImpl implements MemberService {
 		memberRepository.save(member);
 	}
 
+	@Override
+	public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+		Member member = memberRepository.findByUsernameOrElseThrow(loginRequestDto.getUsername());
+		if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
+			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_PASSWORD_MISMATCH);
+		}
+		String token = jwtProvider.createToken(member.getUsername(), member.getMemberRoleEnum());
+		return new LoginResponseDto(member.getUsername(), member.getMemberRoleEnum(), token);
+	}
 }
