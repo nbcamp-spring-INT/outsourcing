@@ -55,6 +55,17 @@ public class JwtProvider {
 				.compact();
 	}
 
+	public String createLogoutToken(String username) {
+		Date date = new Date();
+
+		return BEARER_PREFIX +
+			Jwts.builder()
+				.setSubject(username)
+				.setExpiration(date)
+				.signWith(key, signatureAlgorithm)
+				.compact();
+	}
+
 	public String getJwtFromHeader(HttpServletRequest request) {
 		String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
