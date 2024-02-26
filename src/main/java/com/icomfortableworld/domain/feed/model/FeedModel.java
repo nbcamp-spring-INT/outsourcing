@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class FeedModel {
     private Long feedId;
     private String content;
-    private String like_count;
-    private LocalDateTime created_time;
+    private String likeCount;
+    private LocalDateTime createdDate;
 }
