@@ -2,6 +2,7 @@ package com.icomfortableworld.domain.member.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
 import com.icomfortableworld.domain.member.service.MemberService;
 import com.icomfortableworld.jwt.JwtProvider;
+import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -36,5 +38,13 @@ public class MemberController {
 		LoginResponseDto loginResponseDto = memberService.login(loginRequestDto);
 		response.addHeader(JwtProvider.AUTHORIZATION_HEADER, loginResponseDto.getToken());
 		return CommonResponseDto.of(HttpStatus.OK, "로그인 성공", null);
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<CommonResponseDto<Void>> logout(HttpServletResponse response, @AuthenticationPrincipal
+	MemberDetailsImpl memberDetails) {
+		String logoutToken = memberService.logout(memberDetails.getUsername());
+		response.addHeader(JwtProvider.AUTHORIZATION_HEADER, logoutToken);
+		return CommonResponseDto.of(HttpStatus.OK, "로그아웃 성공", null);
 	}
 }

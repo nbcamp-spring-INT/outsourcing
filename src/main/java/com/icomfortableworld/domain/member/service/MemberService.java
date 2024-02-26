@@ -8,4 +8,6 @@ public interface MemberService {
 	void signup(SignupRequestDto signupRequestDto);
 
 	LoginResponseDto login(LoginRequestDto loginRequestDto);
+
+	String logout(String username);
 }
