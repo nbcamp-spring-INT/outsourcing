@@ -16,6 +16,6 @@ public class CustomJwtException extends RuntimeException {
 
 	@Override
 	public String getMessage() {
-		return String.format("[JWT ERROR] %s", message);
+		return message;
 	}
 }
