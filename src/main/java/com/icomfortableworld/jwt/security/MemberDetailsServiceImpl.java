@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class MemberDetailsServiceImpl implements UserDetailsService {
 
 	private final MemberRepository memberRepository;
 
@@ -21,6 +21,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		Member member = memberRepository.findByUsername(username)
 			.orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
 
-		return new UserDetailsImpl(member);
+		return new MemberDetailsImpl(member);
 	}
 }

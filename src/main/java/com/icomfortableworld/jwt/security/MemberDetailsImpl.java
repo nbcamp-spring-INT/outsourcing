@@ -13,11 +13,11 @@ import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 import lombok.Getter;
 
 @Getter
-public class UserDetailsImpl implements UserDetails {
+public class MemberDetailsImpl implements UserDetails {
 
 	private final Member member;
 
-	public UserDetailsImpl(Member member) {
+	public MemberDetailsImpl(Member member) {
 		this.member = member;
 	}
 
