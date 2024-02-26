@@ -1,12 +1,17 @@
 package com.icomfortableworld.domain.feed.entity;
 
 import com.icomfortableworld.common.entity.Timestamped;
+import com.icomfortableworld.domain.feed.dto.FeedRequestDto;
+import com.icomfortableworld.domain.feed.model.FeedModel;
+import com.icomfortableworld.domain.member.entity.Member;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.springframework.security.core.userdetails.User;
 
 @Entity
 @Getter
@@ -26,5 +31,14 @@ public class Feed extends Timestamped {
     @Column(nullable = false)
     private Long likeCount;
 
+    @ManyToOne
+    @JoinColumn(name="memberId")
+    private Member member;
 
+    public Feed(FeedRequestDto requestDto, Member member){
+        this.content=requestDto.getContent();
+        this.likeCount=requestDto.getLikeCount();
+       // this.createdDate=requestDto.getCreatedDate();
+        this.member=member;
+    }
 }
