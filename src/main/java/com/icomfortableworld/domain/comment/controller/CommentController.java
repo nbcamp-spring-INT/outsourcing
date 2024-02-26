@@ -1,11 +1,9 @@
 package com.icomfortableworld.domain.comment.controller;
 
-import java.util.List;
+import java.security.Principal;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,48 +15,24 @@ import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
 import com.icomfortableworld.domain.comment.service.CommentService;
 import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 RestController
-@RequestMapping("/feeds/{feedId}/comments")
 @RequiredArgsConstructor
+@RequestMapping("/api/version-1/feeds")
+
 public class CommentController {
 
 	private final CommentService commentService;
 
-	@PostMapping("")
-	public CommentResponseDto createComment(
+	@PostMapping
+	public ResponseEntity<CommentResponseDto> createComment(
 		@PathVariable Long feedId,
-		@Valid @RequestBody CommentRequestDto commentRequestDto,
+		@RequestBody CommentRequestDto commentRequestDto,
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 
 		return commentService.createComment(feedId, commentRequestDto, memberDetails);
 	}
-
-	@GetMapping("")
-	public List<CommentResponseDto> readComment(@PathVariable Long feedId) {
-
-		return commentService.readComment(boardId);
-	}
-
-	@PatchMapping("/{commentId}")
-	public CommentResponseDto updateComment(
-		@PathVariable Long commentId,
-		@Valid @RequestBody CommentRequestDto commentRequestDto,
-		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-
-		return commentService.updateComment(commentId, commentRequestDto, memberDetails);
-	}
-
-	@DeleteMapping("/{commentId}")
-	public ExceptionDto deleteComment(
-		@PathVariable Long commentId,
-		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-
-		return commentService.deleteComment(commentId, memberDetails);
-	}
-
 
 }
 

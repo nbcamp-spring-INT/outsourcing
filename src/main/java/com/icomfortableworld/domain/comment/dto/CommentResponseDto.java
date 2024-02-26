@@ -5,14 +5,16 @@ import com.icomfortableworld.domain.comment.entity.Comment;
 import lombok.Getter;
 
 @Getter
+
 public class CommentResponseDto {
+
 	private Long commentId;
 	private String comment;
-	private String feedId;
+	private String nickname;
 
-	public CommentResponseDto(Comment comment, Long feedId) {
+	public CommentResponseDto(Comment comment, String nickname) {
 		this.commentId = comment.getCommentId();
 		this.comment = comment.getContents();
-		this.feedId = feedId;
+		this.nickname = nickname;
 	}
 }
