@@ -1,10 +1,7 @@
 package com.icomfortableworld.domain.comment.controller;
 
-import java.security.Principal;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,21 +14,19 @@ import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 
-RestController
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/version-1/feeds")
-
+@RequestMapping("/api/version-1/comments")
 public class CommentController {
 
 	private final CommentService commentService;
 
 	@PostMapping
 	public ResponseEntity<CommentResponseDto> createComment(
-		@PathVariable Long feedId,
 		@RequestBody CommentRequestDto commentRequestDto,
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 
-		return commentService.createComment(feedId, commentRequestDto, memberDetails);
+		return commentService.createComment(commentRequestDto, memberDetails.getMember().getMemberId());
 	}
 
 }

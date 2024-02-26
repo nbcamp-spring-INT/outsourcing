@@ -9,5 +9,5 @@ import lombok.Getter;
 
 public class CommentRequestDto extends Timestamped {
 	@NotBlank
-	private String comment;
+	private String content;
 }

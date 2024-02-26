@@ -1,17 +1,26 @@
 package com.icomfortableworld.domain.comment.repository;
 
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
 import com.icomfortableworld.domain.comment.entity.Comment;
 
-public class CommentRepositoryImpl implements CommentRepository {
-	private final CommentRepository commentRepository;
-}
+import lombok.RequiredArgsConstructor;
 
-@Override
-public Optional<Comment> findById(Long feedId) {
-	return feedJpaRepository.findById(feedId);
+@Repository
+@RequiredArgsConstructor
+
+public class CommentRepositoryImpl implements CommentRepository {
+	private final CommentJpaRepository commentJpaRepository;
+
+	// @Override
+	// public Optional<Comment> findById(Long commentId) {
+	// 	return commentRepository.findById(commentId);
+	// }
+
 	@Override
 	public Comment save(Comment comment) {
-		return CommentJpaRepository.save(comment);
+		return commentJpaRepository.save(comment);
 	}
+}
+
+
