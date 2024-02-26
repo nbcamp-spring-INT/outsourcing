@@ -11,6 +11,7 @@ import com.icomfortableworld.domain.feed.dto.FeedRequestDto;
 import com.icomfortableworld.domain.feed.service.FeedService;
 import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -20,7 +21,7 @@ public class FeedController {
 	private final FeedService feedService;
 
 	@PostMapping
-	public ResponseEntity<CommonResponseDto<Void>> createFeed(@RequestBody FeedRequestDto requestDto,
+	public ResponseEntity<CommonResponseDto<Void>> createFeed(@Valid @RequestBody FeedRequestDto requestDto,
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails){
 		feedService.createFeed(requestDto, memberDetails.getMember().getMemberId());
 		return CommonResponseDto.of(HttpStatus.OK, "게시글이 작성되었습니다.", null);
