@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.icomfortableworld.common.dto.CommonResponseDto;
 import com.icomfortableworld.domain.feed.dto.FeedRequestDto;
 import com.icomfortableworld.domain.feed.service.FeedService;
+import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,10 +19,11 @@ import lombok.RequiredArgsConstructor;
 public class FeedController {
 	private final FeedService feedService;
 
-	@PostMapping("")
+	@PostMapping
 	public ResponseEntity<CommonResponseDto<Void>> createFeed(@RequestBody FeedRequestDto requestDto,
-						@AuthenticationPrincipal UserDetailsImpl userDetails){
-		feedService.createFeed(requestDto, userDetails.getMember());
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails){
+		feedService.createFeed(requestDto, memberDetails.getMember().getMemberId());
 		return CommonResponseDto.of(HttpStatus.OK, "게시글이 작성되었습니다.", null);
 	}
+
 }

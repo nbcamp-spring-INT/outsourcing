@@ -6,5 +6,5 @@ import com.icomfortableworld.domain.feed.dto.FeedRequestDto;
 import com.icomfortableworld.domain.member.entity.Member;
 
 public interface FeedService {
-    void createFeed(FeedRequestDto requestDto, Member member);
+    void createFeed(FeedRequestDto requestDto, Long memberId);
 }
