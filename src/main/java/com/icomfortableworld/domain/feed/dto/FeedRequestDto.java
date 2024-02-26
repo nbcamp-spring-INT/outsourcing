@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FeedRequestDto extends Timestamped {
-	@NotBlank
+	@NotBlank(message = "내용이 없습니다.")
 	private String content;
 }
