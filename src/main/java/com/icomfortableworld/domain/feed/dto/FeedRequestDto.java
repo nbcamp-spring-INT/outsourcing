@@ -1,4 +1,22 @@
 package com.icomfortableworld.domain.feed.dto;
 
-public class FeedRequestDto {
+import java.time.LocalDateTime;
+
+import com.icomfortableworld.common.entity.Timestamped;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class FeedRequestDto extends Timestamped {
+	@NotBlank
+	private String content;
+
+	@NotBlank
+	private Long like_count;
+
+	@NotBlank
+	private LocalDateTime created_time;
 }
