@@ -2,63 +2,69 @@ package com.icomfortableworld.jwt.security;
 
 import java.io.IOException;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.icomfortableworld.domain.member.dto.request.LoginRequestDto;
-import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 import com.icomfortableworld.jwt.JwtProvider;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j(topic = "로그인 및 JWT 생성")
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+@Slf4j(topic = "JWT 검증 및 인가")
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
 	private final JwtProvider jwtProvider;
+	private final MemberDetailsServiceImpl userDetailsService;
 
-	public JwtAuthenticationFilter(JwtProvider jwtProvider) {
+	public JwtAuthenticationFilter(JwtProvider jwtProvider, MemberDetailsServiceImpl userDetailsService) {
 		this.jwtProvider = jwtProvider;
-		setFilterProcessesUrl("/api/version-1/members/login");
+		this.userDetailsService = userDetailsService;
 	}
 
-	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
-		AuthenticationException {
-		try {
-			LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
 
-			return getAuthenticationManager().authenticate(
-				new UsernamePasswordAuthenticationToken(
-					requestDto.getUsername(),
-					requestDto.getPassword(),
-					null
-				)
-			);
-		} catch (IOException e) {
-			log.error(e.getMessage());
-			throw new RuntimeException(e.getMessage());
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+		FilterChain filterChain) throws ServletException, IOException {
+
+		String token = jwtProvider.getJwtFromHeader(request);
+
+		if (StringUtils.hasText(token)) {
+
+			if (!jwtProvider.validateToken(token)) {
+				log.error("Token Error");
+				return;
+			}
+
+			Claims info = jwtProvider.getUserInfoFromToken(token);
+
+			try {
+				setAuthentication(info.getSubject());
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				return;
+			}
 		}
+		filterChain.doFilter(request, response);
 	}
 
-	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-		Authentication authResult) {
-		String username = ((UserDetailsImpl)authResult.getPrincipal()).getUsername();
-		MemberRoleEnum memberRoleEnum = ((UserDetailsImpl)authResult.getPrincipal()).getMember().getMemberRoleEnum();
-		String token = jwtProvider.createToken(username, memberRoleEnum);
-		log.info(username + "로그인 성공");
-		response.addHeader(JwtProvider.AUTHORIZATION_HEADER, token);
+	public void setAuthentication(String username) {
+		SecurityContext context = SecurityContextHolder.createEmptyContext();
+		Authentication authentication = createAuthentication(username);
+		context.setAuthentication(authentication);
+		SecurityContextHolder.setContext(context);
 	}
 
-	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-		AuthenticationException failed) {
-		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+	private Authentication createAuthentication(String username) {
+		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	}
 }
