@@ -21,8 +21,8 @@ public class FeedServiceImpl implements FeedService{
 	private final FeedRepository feedRepository;
 
 	@Override
-	public void createFeed(FeedRequestDto requestDto, Member member) {
-		Feed feed = new Feed(requestDto, member);
+	public void createFeed(FeedRequestDto requestDto, Long memberId) {
+		Feed feed = new Feed(requestDto, memberId);
 		feedRepository.save(feed);
 	}
 }

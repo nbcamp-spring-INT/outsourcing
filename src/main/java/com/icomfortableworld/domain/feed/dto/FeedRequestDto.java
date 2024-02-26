@@ -11,14 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FeedRequestDto extends Timestamped {
-
-
 	@NotBlank
 	private String content;
-
-	@NotBlank
-	private Long likeCount;
-
-	@NotBlank
-	private LocalDateTime createdDate;
 }

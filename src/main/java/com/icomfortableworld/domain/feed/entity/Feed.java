@@ -15,11 +15,10 @@ import org.springframework.security.core.userdetails.User;
 
 @Entity
 @Getter
-@SQLDelete(sql="update feeds set deleted_date = NOW() where id=?")
+@SQLDelete(sql="update feed set deleted_date = NOW() where id=?")
 @SQLRestriction(value="deleted_date is NULL")
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="feeds")
 public class Feed extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,14 +30,12 @@ public class Feed extends Timestamped {
     @Column(nullable = false)
     private Long likeCount;
 
-    @ManyToOne
-    @JoinColumn(name="memberId")
-    private Member member;
+    @Column(nullable = false)
+    private Long memberId;
 
-    public Feed(FeedRequestDto requestDto, Member member){
+    public Feed(FeedRequestDto requestDto, Long memberId){
         this.content=requestDto.getContent();
-        this.likeCount=requestDto.getLikeCount();
-       // this.createdDate=requestDto.getCreatedDate();
-        this.member=member;
+        this.memberId=memberId;
+        this.likeCount=0L;
     }
 }
