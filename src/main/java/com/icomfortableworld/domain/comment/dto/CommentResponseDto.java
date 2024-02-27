@@ -2,22 +2,24 @@ package com.icomfortableworld.domain.comment.dto;
 
 import com.icomfortableworld.domain.comment.entity.Comment;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CommentResponseDto {
 
-	private Long commentId;
-	private String comment;
-	private String nickname;
+	private String content;
 
-	public CommentResponseDto(Comment comment, String nickname) {
-		this.commentId = comment.getCommentId();
-		this.comment = comment.getContent();
-		this.nickname = nickname;
-	}
-
-	public CommentResponseDto(Long commentId, String content, Long memberId, Long feedId) {
+	public static CommentResponseDto convertToDto(Comment comment) {
+		return CommentResponseDto.builder()
+			.content(comment.getContent())
+			.build();
 	}
 }
