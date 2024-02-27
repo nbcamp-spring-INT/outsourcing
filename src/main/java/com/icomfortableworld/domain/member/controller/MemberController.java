@@ -3,6 +3,8 @@ package com.icomfortableworld.domain.member.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import com.icomfortableworld.common.dto.CommonResponseDto;
 import com.icomfortableworld.domain.member.dto.request.LoginRequestDto;
 import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
+import com.icomfortableworld.domain.member.dto.response.MemberResponseDto;
 import com.icomfortableworld.domain.member.service.MemberService;
 import com.icomfortableworld.jwt.JwtProvider;
 import com.icomfortableworld.jwt.security.MemberDetailsImpl;
@@ -46,5 +49,11 @@ public class MemberController {
 		String logoutToken = memberService.logout(memberDetails.getUsername());
 		response.addHeader(JwtProvider.AUTHORIZATION_HEADER, logoutToken);
 		return CommonResponseDto.of(HttpStatus.OK, "로그아웃 성공", null);
+	}
+
+	@GetMapping("/{memberId}")
+	public ResponseEntity<CommonResponseDto<MemberResponseDto>> getMember(
+		@PathVariable("memberId") Long memberId) {
+		return CommonResponseDto.of(HttpStatus.OK, "회원정보조회 성공", memberService.getMemeber(memberId));
 	}
 }

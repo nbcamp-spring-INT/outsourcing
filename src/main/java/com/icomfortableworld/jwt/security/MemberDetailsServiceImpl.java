@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.icomfortableworld.domain.member.entity.Member;
+import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Member member = memberRepository.findByUsername(username)
+		MemberModel memberModel = memberRepository.findByUsername(username)
 			.orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
 
-		return new MemberDetailsImpl(member);
+		return new MemberDetailsImpl(memberModel);
 	}
 }
