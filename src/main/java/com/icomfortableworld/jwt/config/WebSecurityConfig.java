@@ -12,9 +12,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.icomfortableworld.jwt.JwtProvider;
-import com.icomfortableworld.jwt.security.JwtAuthenticationFilter;
+import com.icomfortableworld.jwt.security.JwtAuthorizationFilter;
 import com.icomfortableworld.jwt.security.MemberDetailsServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -38,8 +39,8 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	public JwtAuthenticationFilter jwtAuthorizationFilter() {
-		return new JwtAuthenticationFilter(jwtProvider, userDetailsService);
+	public JwtAuthorizationFilter jwtAuthorizationFilter() {
+		return new JwtAuthorizationFilter(jwtProvider, userDetailsService);
 	}
 
 	@Bean
@@ -54,9 +55,13 @@ public class WebSecurityConfig {
 			authorizeHttpRequests
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 				.requestMatchers("/").permitAll()
-				.requestMatchers("/api/version-1/**").permitAll()
+				.requestMatchers("/api/version-1/members/login").permitAll()
+				.requestMatchers("/api/version-1/members/signup").permitAll()
 				.anyRequest().authenticated()
 		);
+
+		http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
 		return http.build();
 	}
 }

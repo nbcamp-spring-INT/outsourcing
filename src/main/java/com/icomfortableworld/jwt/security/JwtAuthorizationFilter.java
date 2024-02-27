@@ -20,12 +20,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "JWT 검증 및 인가")
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
 	private final JwtProvider jwtProvider;
 	private final MemberDetailsServiceImpl userDetailsService;
 
-	public JwtAuthenticationFilter(JwtProvider jwtProvider, MemberDetailsServiceImpl userDetailsService) {
+	public JwtAuthorizationFilter(JwtProvider jwtProvider, MemberDetailsServiceImpl userDetailsService) {
 		this.jwtProvider = jwtProvider;
 		this.userDetailsService = userDetailsService;
 	}
@@ -57,8 +57,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	public void setAuthentication(String username) {
+		SecurityContext context = SecurityContextHolder.createEmptyContext();
 		Authentication authentication = createAuthentication(username);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+		context.setAuthentication(authentication);
+		SecurityContextHolder.setContext(context);
 	}
 
 	private Authentication createAuthentication(String username) {
