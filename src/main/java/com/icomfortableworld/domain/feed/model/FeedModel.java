@@ -15,7 +15,7 @@ public class FeedModel {
     private Long feedId;
     private Long memberId;
     private String content;
-    private String likeCount;
+    private Long likeCount;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     private LocalDateTime deletedDate;

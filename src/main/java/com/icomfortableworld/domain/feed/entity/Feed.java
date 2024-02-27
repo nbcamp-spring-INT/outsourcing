@@ -24,18 +24,30 @@ public class Feed extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedId;
 
+    @Column(nullable = false)
+    private Long memberId;
+
     @Column(nullable = false, length=140)
     private String content;
 
     @Column(nullable = false)
     private Long likeCount;
 
-    @Column(nullable = false)
-    private Long memberId;
-
     public Feed(FeedRequestDto requestDto, Long memberId){
         this.content=requestDto.getContent();
-        this.memberId=memberId;
         this.likeCount=0L;
+        this.memberId=memberId;
+    }
+
+    public FeedModel toModel(){
+        return FeedModel.builder()
+            .feedId(feedId)
+            .memberId(memberId)
+            .content(content)
+            .likeCount(likeCount)
+            .createdDate(this.getCreatedDate())
+            .updatedDate(this.getUpdatedDate())
+            .deletedDate(this.getDeletedDate())
+            .build();
     }
 }

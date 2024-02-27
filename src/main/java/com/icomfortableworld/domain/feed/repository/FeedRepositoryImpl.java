@@ -12,7 +12,7 @@ public class FeedRepositoryImpl implements FeedRepository{
 	private final FeedJpaRepository feedJpaRepository;
 
 	@Override
-	public void save(Feed feed) {
-		feedJpaRepository.save(feed);
+	public Feed save(Feed feed) {
+		return feedJpaRepository.save(feed);
 	}
 }

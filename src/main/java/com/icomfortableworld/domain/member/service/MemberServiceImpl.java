@@ -67,4 +67,9 @@ public class MemberServiceImpl implements MemberService {
 		String token = jwtProvider.createToken(member.getUsername(), member.getMemberRoleEnum());
 		return new LoginResponseDto(member.getUsername(), member.getMemberRoleEnum(), token);
 	}
+
+	@Override
+	public String logout(String username) {
+		return jwtProvider.createLogoutToken(username);
+	}
 }
