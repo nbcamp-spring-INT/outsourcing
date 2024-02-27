@@ -34,7 +34,7 @@ public class FeedController {
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 		System.out.println("ghlghglghl" + memberDetails.getMember().getMemberId());
 		feedService.createFeed(requestDto, memberDetails.getMember().getMemberId());
-		return CommonResponseDto.of(HttpStatus.OK, "게시글이 작성되었습니다.", null);
+		return CommonResponseDto.of(HttpStatus.OK, "피드 작성 완료", null);
 	}
 
 	@PutMapping("/{feedId}")
@@ -43,14 +43,14 @@ public class FeedController {
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 		FeedResponseDto responseDto = feedService.updateFeed(feedId, requestDto,
 			memberDetails.getMember().getMemberId());
-		return CommonResponseDto.of(HttpStatus.OK, "게시글이 수정되었습니다.", responseDto);
+		return CommonResponseDto.of(HttpStatus.OK, "피드 수정 완료", responseDto);
 	}
 
 	@GetMapping
 	public ResponseEntity<CommonResponseDto<List<FeedResponseDto>>> getAllFeeds(
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 		List<FeedResponseDto> responseDto = feedService.getAllFeeds(memberDetails.getMember().getMemberId());
-		return CommonResponseDto.of(HttpStatus.OK, "전체 게시글을 조회하였습니다.", responseDto);
+		return CommonResponseDto.of(HttpStatus.OK, "전체 피드 조회 성공", responseDto);
 	}
 
 	//단건조회 = 댓글도 조회해야 함!
@@ -58,13 +58,13 @@ public class FeedController {
 	public ResponseEntity<CommonResponseDto<FeedResponseDto>> getFeed(@PathVariable Long feedId,
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 		FeedResponseDto responseDto = feedService.getFeed(feedId, memberDetails.getMember().getMemberId());
-		return CommonResponseDto.of(HttpStatus.OK, "게시글을 조회하였습니다.", responseDto);
+		return CommonResponseDto.of(HttpStatus.OK, "피드 조회 성공", responseDto);
 	}
 
 	@GetMapping("/search")
 	public ResponseEntity<CommonResponseDto<List<FeedResponseDto>>> getSearchResultFeeds(@RequestParam String q,
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails){
 		List<FeedResponseDto> responseDto = feedService.getSearchResultFeeds(q, memberDetails.getMember().getMemberId());
-		return CommonResponseDto.of(HttpStatus.OK, 	q+" 검색 결과입니다.", responseDto);
+		return CommonResponseDto.of(HttpStatus.OK, 	q+"에 대한 검색 결과", responseDto);
 	}
 }
