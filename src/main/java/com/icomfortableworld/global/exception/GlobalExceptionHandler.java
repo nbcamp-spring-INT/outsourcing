@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.icomfortableworld.common.dto.CommonResponseDto;
 import com.icomfortableworld.global.exception.dto.ErrorResponseDto;
+import com.icomfortableworld.global.exception.feed.CustomFeedException;
 import com.icomfortableworld.global.exception.jwt.CustomJwtException;
 import com.icomfortableworld.global.exception.member.CustomMemberException;
 
@@ -34,6 +35,11 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(CustomMemberException.class)
 	public ResponseEntity<CommonResponseDto<Void>> customMemberExceptionHandler(CustomMemberException e) {
+		return CommonResponseDto.of(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+	}
+
+	@ExceptionHandler(CustomFeedException.class)
+	public ResponseEntity<CommonResponseDto<Void>> customFeedExceptionHandler(CustomFeedException e) {
 		return CommonResponseDto.of(HttpStatus.BAD_REQUEST, e.getMessage(), null);
 	}
 }

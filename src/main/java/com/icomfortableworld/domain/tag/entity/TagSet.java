@@ -19,8 +19,8 @@ public class TagSet {
 	@Column(nullable = false)
 	private String tagName;
 
-	public TagSet(String tagName){
-		this.tagName=tagName;
+	public TagSet(String tagName) {
+		this.tagName = tagName;
 	}
 
 }
