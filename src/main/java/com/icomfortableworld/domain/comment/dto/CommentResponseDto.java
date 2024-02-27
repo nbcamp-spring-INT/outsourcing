@@ -17,4 +17,7 @@ public class CommentResponseDto {
 		this.comment = comment.getContent();
 		this.nickname = nickname;
 	}
+
+	public CommentResponseDto(Long commentId, String content, Long memberId, Long feedId) {
+	}
 }
