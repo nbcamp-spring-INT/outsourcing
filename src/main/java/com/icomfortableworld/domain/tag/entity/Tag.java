@@ -4,8 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
-import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -22,8 +22,8 @@ public class Tag {
 	@Column(nullable = false)
 	private Long tagSetId;
 
-	public Tag( Long feedId, Long tagSetId){
-		this.feedId=feedId;
-		this.tagSetId=tagSetId;
+	public Tag(Long feedId, Long tagSetId) {
+		this.feedId = feedId;
+		this.tagSetId = tagSetId;
 	}
 }
