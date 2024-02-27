@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.icomfortableworld.domain.member.dto.request.LoginRequestDto;
 import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
+import com.icomfortableworld.domain.member.dto.response.MemberResponseDto;
 import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
+import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
 import com.icomfortableworld.global.exception.member.CustomMemberException;
 import com.icomfortableworld.global.exception.member.MemberErrorCode;
@@ -35,13 +37,13 @@ public class MemberServiceImpl implements MemberService {
 		String username = signupRequestDto.getUsername();
 		String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
-		Optional<Member> checkUsername = memberRepository.findByUsername(username);
+		Optional<MemberModel> checkUsername = memberRepository.findByUsername(username);
 		if (checkUsername.isPresent()) {
 			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_USERNAME_ALREADY_EXISTS);
 		}
 
 		String email = signupRequestDto.getEmail();
-		Optional<Member> checkEmail = memberRepository.findByEmail(email);
+		Optional<MemberModel> checkEmail = memberRepository.findByEmail(email);
 		if (checkEmail.isPresent()) {
 			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_EMAIL_ALREADY_EXISTS);
 		}
@@ -60,16 +62,22 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-		Member member = memberRepository.findByUsernameOrElseThrow(loginRequestDto.getUsername());
-		if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
+		MemberModel memberModel = memberRepository.findByUsernameOrElseThrow(loginRequestDto.getUsername());
+		if (!passwordEncoder.matches(loginRequestDto.getPassword(), memberModel.getPassword())) {
 			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_PASSWORD_MISMATCH);
 		}
-		String token = jwtProvider.createToken(member.getUsername(), member.getMemberRoleEnum());
-		return new LoginResponseDto(member.getUsername(), member.getMemberRoleEnum(), token);
+		String token = jwtProvider.createToken(memberModel.getUsername(), memberModel.getMemberRoleEnum());
+		return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token);
 	}
 
 	@Override
 	public String logout(String username) {
 		return jwtProvider.createLogoutToken(username);
+	}
+
+	@Override
+	public MemberResponseDto getMemeber(Long memberId) {
+		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
+		return MemberResponseDto.from(memberModel);
 	}
 }

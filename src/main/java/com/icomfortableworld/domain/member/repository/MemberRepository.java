@@ -3,18 +3,19 @@ package com.icomfortableworld.domain.member.repository;
 import java.util.Optional;
 
 import com.icomfortableworld.domain.member.entity.Member;
+import com.icomfortableworld.domain.member.model.MemberModel;
 
 public interface MemberRepository {
 
-	Optional<Member> findById(Long memberId);
+	Optional<MemberModel> findById(Long memberId);
 
-	Member findByIdOrElseThrow(Long memberId);
+	MemberModel findByIdOrElseThrow(Long memberId);
 
-	Optional<Member> findByUsername(String username);
+	Optional<MemberModel> findByUsername(String username);
 
-	Member findByUsernameOrElseThrow(String username);
+	MemberModel findByUsernameOrElseThrow(String username);
 
-	Optional<Member> findByEmail(String email);
+	Optional<MemberModel> findByEmail(String email);
 
-	Member save(Member member);
+	void save(Member member);
 }
