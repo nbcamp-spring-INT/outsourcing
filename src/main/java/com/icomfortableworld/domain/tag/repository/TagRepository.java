@@ -11,4 +11,8 @@ import com.icomfortableworld.domain.tag.entity.Tag;
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
 	List<Tag> findAllByFeedId(Long feedId);
+
+	Tag findByTagSetId(Long tagSetId);
+
+	List<Tag> findAllByTagSetId(Long tagSetId);
 }

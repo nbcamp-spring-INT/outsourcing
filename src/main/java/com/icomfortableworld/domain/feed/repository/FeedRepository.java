@@ -16,4 +16,6 @@ public interface FeedRepository {
 	FeedModel update(Long feedId, Long memberId, String content);
 
 	List<FeedModel> findAll();
+
+	List<FeedModel> findAllById(Long feedId);
 }

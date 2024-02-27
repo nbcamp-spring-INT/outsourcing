@@ -13,4 +13,6 @@ public interface FeedService {
 	List<FeedResponseDto> getAllFeeds(Long memberId);
 
 	FeedResponseDto getFeed(Long feedId,Long memberId);
+
+	List<FeedResponseDto> getSearchResultFeeds(String q, Long memberId);
 }

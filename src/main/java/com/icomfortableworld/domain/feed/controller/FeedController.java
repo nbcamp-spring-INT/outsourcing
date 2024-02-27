@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.icomfortableworld.common.dto.CommonResponseDto;
@@ -58,5 +59,12 @@ public class FeedController {
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 		FeedResponseDto responseDto = feedService.getFeed(feedId, memberDetails.getMember().getMemberId());
 		return CommonResponseDto.of(HttpStatus.OK, "게시글을 조회하였습니다.", responseDto);
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<CommonResponseDto<List<FeedResponseDto>>> getSearchResultFeeds(@RequestParam String q,
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails){
+		List<FeedResponseDto> responseDto = feedService.getSearchResultFeeds(q, memberDetails.getMember().getMemberId());
+		return CommonResponseDto.of(HttpStatus.OK, 	q+" 검색 결과입니다.", responseDto);
 	}
 }

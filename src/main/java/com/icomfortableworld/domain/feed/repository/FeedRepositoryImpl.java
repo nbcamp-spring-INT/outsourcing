@@ -40,7 +40,7 @@ public class FeedRepositoryImpl implements FeedRepository {
 			() -> new CustomFeedException(FeedErrorCode.FEED_ERROR_CODE_NOT_FOUND)
 		);
 		if(!feed.getMemberId().equals(memberId)){
-			throw new CustomFeedException(FeedErrorCode.FEED_ERROR_CODE_ID_MISSMATCH);
+			throw new CustomFeedException(FeedErrorCode.FEED_ERROR_CODE_ID_MISMATCH);
 		}
 		feed.update(content);
 		return feed.toModel();
@@ -49,6 +49,11 @@ public class FeedRepositoryImpl implements FeedRepository {
 	@Override
 	public List<FeedModel> findAll() {
 		return feedJpaRepository.findAll().stream().map(Feed::toModel).toList();
+	}
+
+	@Override
+	public List<FeedModel> findAllById(Long feedId) {
+		return feedJpaRepository.findById(feedId).stream().map(Feed::toModel).toList();
 	}
 
 }
