@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
+import com.icomfortableworld.domain.comment.model.CommentModel;
 import com.icomfortableworld.domain.comment.repository.CommentRepository;
 import com.icomfortableworld.domain.feed.dto.requestDto.FeedRequestDto;
 import com.icomfortableworld.domain.feed.dto.responseDto.CommentFeedResponseDto;
@@ -13,6 +15,8 @@ import com.icomfortableworld.domain.feed.dto.responseDto.FeedResponseDto;
 import com.icomfortableworld.domain.feed.entity.Feed;
 import com.icomfortableworld.domain.feed.model.FeedModel;
 import com.icomfortableworld.domain.feed.repository.FeedRepository;
+import com.icomfortableworld.domain.follow.entity.Follow;
+import com.icomfortableworld.domain.follow.repository.FollowRepository;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
@@ -35,6 +39,7 @@ public class FeedServiceImpl implements FeedService {
 	private final CommentRepository commentRepository;
 	private final TagRepository tagRepository;
 	private final TagSetRepository tagSetRepository;
+	private final FollowRepository followRepository;
 
 	@Override
 	public void createFeed(FeedRequestDto requestDto, Long memberId) {
@@ -68,26 +73,24 @@ public class FeedServiceImpl implements FeedService {
 	public List<FeedResponseDto> getAllFeeds(Long memberId, MemberRoleEnum memberRoleEnum) {
 		memberRepository.findByIdOrElseThrow(memberId);
 
+		List<FeedResponseDto> response = new ArrayList<>();
 
+		if(memberRoleEnum==MemberRoleEnum.ADMIN){
+			List<FeedModel> feedModels = feedRepository.findAll();
 
-		List<FeedModel> feedModels = feedRepository.findAll();
-		List<String> tagNameList = new ArrayList<>();
-		List<FeedResponseDto> responseDtoList = new ArrayList<>();
-
-		for (FeedModel feedModel : feedModels) {
-			List<Tag> tagList = tagRepository.findAllByFeedId(feedModel.getFeedId());
-
-			for (Tag tag : tagList) {
-				tagNameList.add(tagSetRepository.findByTagSetId(tag.getTagSetId()).getTagName());
+			//여기부터 밑 함수
+			response = getAllFeedsIncludingTags(feedModels);
+		}else{
+			List<Follow> followList = followRepository.findByFromId(memberId);
+			for(Follow f : followList){
+				Long toId = f.getToId();
+				List<FeedModel> feedModels = feedRepository.findByMemberId(toId);
+				//이렇게 해도 됨? 위에 코드랑 중복쓰
+				response = getAllFeedsIncludingTags(feedModels);
 			}
-
-			MemberModel memberModel = memberRepository.findByIdOrElseThrow(feedModel.getMemberId());
-
-			FeedResponseDto responseDto = new FeedResponseDto(feedModel.getFeedId(), memberModel.getNickname() , feedModel.getContent(), tagNameList);
-			responseDtoList.add(responseDto);
-			tagNameList.clear();
 		}
-		return responseDtoList;
+
+		return response;
 	}
 
 	@Override
@@ -148,7 +151,7 @@ public class FeedServiceImpl implements FeedService {
 						memberModel.getNickname(), feedModel.getContent(), tagNameList));
 				}
 			}
-		}else {
+		}else if(type.equals("content")){
 			//단어로 내용 content에서 조회
 			List<FeedModel> allFeeds = feedRepository.findAll();
 			for (FeedModel feedModel : allFeeds) {
@@ -177,5 +180,26 @@ public class FeedServiceImpl implements FeedService {
 		memberRepository.findByIdOrElseThrow(memberId);
 
 		feedRepository.deleteById(feedId, memberId, authority);
+	}
+
+	public List<FeedResponseDto> getAllFeedsIncludingTags(List<FeedModel> feedModels) {
+		List<String> tagNameList = new ArrayList<>();
+		List<FeedResponseDto> responseDtoList = new ArrayList<>();
+
+		for (FeedModel feedModel : feedModels) {
+			List<Tag> tagList = tagRepository.findAllByFeedId(feedModel.getFeedId());
+
+			for (Tag tag : tagList) {
+				tagNameList.add(tagSetRepository.findByTagSetId(tag.getTagSetId()).getTagName());
+			}
+
+			MemberModel memberModel = memberRepository.findByIdOrElseThrow(feedModel.getMemberId());
+
+			FeedResponseDto responseDto = new FeedResponseDto(feedModel.getFeedId(), memberModel.getNickname(),
+				feedModel.getContent(), tagNameList);
+			responseDtoList.add(responseDto);
+			tagNameList.clear();
+		}
+		return responseDtoList;
 	}
 }

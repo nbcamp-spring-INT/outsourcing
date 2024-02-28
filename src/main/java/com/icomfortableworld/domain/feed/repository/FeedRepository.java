@@ -21,4 +21,6 @@ public interface FeedRepository {
 	List<FeedModel> findAllById(Long feedId);
 
 	void deleteById(Long feedId, Long memberId, MemberRoleEnum authority);
+
+	List<FeedModel> findByMemberId(Long toId);
 }
