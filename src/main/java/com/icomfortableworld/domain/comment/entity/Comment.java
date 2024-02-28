@@ -4,7 +4,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.icomfortableworld.common.entity.Timestamped;
-import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
+import com.icomfortableworld.domain.comment.dto.CommentRequestUpdateDto;
 import com.icomfortableworld.domain.comment.model.CommentModel;
 
 import jakarta.persistence.Column;
@@ -61,7 +61,7 @@ public class Comment extends Timestamped {
 			.build();
 	}
 
-	public void update(CommentRequestDto commentRequestDto) {
+	public void update(CommentRequestUpdateDto commentRequestDto) {
 		this.content = commentRequestDto.getContent();
 	}
 }

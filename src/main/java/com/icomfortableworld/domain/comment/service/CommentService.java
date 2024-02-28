@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
+import com.icomfortableworld.domain.comment.dto.CommentRequestUpdateDto;
 import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
 
 
@@ -19,9 +20,9 @@ public interface CommentService {
 	List<CommentResponseDto> readComment(Long feedId, Long memberId);
 
 	// UPDATE
-	CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, Long memberId);
+	CommentResponseDto updateComment(Long commentId, CommentRequestUpdateDto commentRequestUpdateDto, Long memberId);
 
 	//DELETE
-	void deleteComment(CommentRequestDto commentRequestDto, Long memberId);
+	// void deleteComment(CommentRequestDto commentRequestDto, Long memberId);
 
 }

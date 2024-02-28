@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
+import com.icomfortableworld.domain.comment.dto.CommentRequestUpdateDto;
 import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
 import com.icomfortableworld.domain.comment.entity.Comment;
 import com.icomfortableworld.domain.comment.model.CommentModel;
@@ -14,9 +15,7 @@ import com.icomfortableworld.domain.feed.model.FeedModel;
 import com.icomfortableworld.domain.feed.repository.FeedRepository;
 import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
-import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -52,30 +51,22 @@ public class CommentServiceImpl implements CommentService {
 		return commentResponseDtos;
 	}
 
-	@Override
-	public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, Long memberId) {
-		return null;
-	}
-
-
 	// UPDATE
-	public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, MemberDetailsImpl memberDetails) {
-		Comment comment = (Comment)commentRepository.findByFeedId(commentRequestDto.getFeedId());
+	public CommentResponseDto updateComment(Long commentId, CommentRequestUpdateDto commentRequestUpdateDto, Long memberId) {
 
-		if(!(comment.getMemberId() == memberDetails.getMember().getMemberId())) {
-			throw new IllegalArgumentException("등록된 사용자가 아닙니다.");
-		}
+		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
+		commentRepository.findByIdOrElseThrow(commentId);
+		CommentModel commentModel = commentRepository.update(commentId, commentRequestUpdateDto);
+		return CommentResponseDto.convertToDto(commentModel,memberModel.getNickname());
 
-		comment.update(commentRequestDto);
-		return new CommentResponseDto(comment, memberDetails.getMember().getNickname());
 	}
 
 	// DELETE
-	public void deleteComment(CommentRequestDto commentRequestDto Long memberId) {
-		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
-
-		commentRepository.delete(comment);
-	}
+	// public void deleteComment(CommentRequestDto commentRequestDto, Long memberId) {
+	// 	MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
+	//
+	// 	commentRepository.delete(comment);
+	// }
 }
 
 
