@@ -82,17 +82,18 @@ public class MemberServiceImpl implements MemberService {
 		}
 		String token = jwtProvider.createToken(memberModel.getUsername(), memberModel.getMemberRoleEnum());
 		List<Message> messageList = messageJpaRepository.findByToNameAndIsReadFalse(loginRequestDto.getUsername());
-		Map<String, List<String>> messages = new HashMap<>();
+		Map<String, List<String>> massageBox = new HashMap<>();
+
 		for (Message message : messageList) {
-			if (messages.containsKey(message.getFromName())) {
-				messages.put(message.getFromName(), new ArrayList<>(List.of(message.getContent())));
+			if (massageBox.containsKey(message.getFromName())) {
+				massageBox.get(message.getFromName()).add(message.getContent());
 			} else {
-				messages.get(message.getFromName()).add(message.getContent());
+				massageBox.put(message.getFromName(), new ArrayList<>(List.of(message.getContent())));
 			}
 			message.readMessage();
 		}
 
-		MessageBoxDto messageBoxDto = new MessageBoxDto(memberModel.getUsername(), messages);
+		MessageBoxDto messageBoxDto = new MessageBoxDto(memberModel.getUsername(), massageBox);
 		return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token, messageBoxDto);
 	}
 
