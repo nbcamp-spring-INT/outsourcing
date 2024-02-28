@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.icomfortableworld.domain.follow.repository.FollowRepository;
 import com.icomfortableworld.domain.member.dto.request.LoginRequestDto;
@@ -28,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
@@ -84,7 +82,6 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public MemberResponseDto getMemeber(Long memberId) {
 		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
 		Long followerCount = getFollowingCount(memberId);
