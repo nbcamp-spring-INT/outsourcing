@@ -19,6 +19,8 @@ import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberUpdateResponseDto;
 import com.icomfortableworld.domain.member.service.MemberService;
+import com.icomfortableworld.global.exception.member.CustomMemberException;
+import com.icomfortableworld.global.exception.member.MemberErrorCode;
 import com.icomfortableworld.jwt.JwtProvider;
 import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
@@ -62,7 +64,11 @@ public class MemberController {
 
 	@PutMapping("{memberId}")
 	public ResponseEntity<CommonResponseDto<MemberUpdateResponseDto>> updateMember(@PathVariable Long memberId,
-		@RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
+		@Valid @RequestBody MemberUpdateRequestDto memberUpdateRequestDto,
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+		if (!memberDetails.getMember().getMemberId().equals(memberId)) {
+			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_MEMBER_ID_MISMATCH);
+		}
 		return CommonResponseDto.of(HttpStatus.OK, "회원 정보수정 성공",
 			memberService.updateMember(memberId, memberUpdateRequestDto));
 	}
