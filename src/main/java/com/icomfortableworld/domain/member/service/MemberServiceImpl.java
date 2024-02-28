@@ -110,6 +110,19 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public List<MemberResponseDto> getMemebers(MemberRoleEnum memberRoleEnum) {
+		if (memberRoleEnum == MemberRoleEnum.ADMIN) {
+			List<MemberModel> memberModelList = memberRepository.findAll();
+			return memberModelList.stream().map(memberModel -> {
+				Long followerCount = getFollowingCount(memberModel.getMemberId());
+				return MemberResponseDto.from(memberModel, followerCount);
+			}).toList();
+		} else {
+			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_NOT_AUTH);
+		}
+	}
+
+	@Override
 	public MemberUpdateResponseDto updateMember(Long memberId, MemberUpdateRequestDto memberUpdateRequestDto) {
 		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
 		if (!passwordEncoder.matches(memberUpdateRequestDto.getPassword(), memberModel.getPassword())) {
