@@ -2,6 +2,7 @@ package com.icomfortableworld.domain.follow.repository;
 
 import com.icomfortableworld.domain.follow.entity.Follow;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FollowRepository {
@@ -13,6 +14,8 @@ public interface FollowRepository {
     Optional<Follow> findByFollowIdAndFromId(Long followId, Long fromId);
 
     void delete(Follow follow);
+
+    List<Follow> findByFromId(Long memberId);
 
 
 }
