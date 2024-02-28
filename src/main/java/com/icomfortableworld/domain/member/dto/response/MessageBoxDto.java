@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class MessageBoxDto {
-	private String toName;
+	private String username;
 	private Map<String, List<String>> messages;
 
 }
