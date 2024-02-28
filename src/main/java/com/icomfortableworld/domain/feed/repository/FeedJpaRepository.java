@@ -8,4 +8,5 @@ import com.icomfortableworld.domain.feed.entity.Feed;
 import com.icomfortableworld.domain.feed.model.FeedModel;
 
 public interface FeedJpaRepository extends JpaRepository<Feed, Long> {
+	List<FeedModel> findByMemberId(Long toId);
 }

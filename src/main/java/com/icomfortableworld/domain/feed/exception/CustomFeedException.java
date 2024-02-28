@@ -1,7 +1,6 @@
-package com.icomfortableworld.global.exception.feed;
+package com.icomfortableworld.domain.feed.exception;
 
 import org.springframework.http.HttpStatus;
-
 
 public class CustomFeedException extends RuntimeException {
 	private final HttpStatus status;

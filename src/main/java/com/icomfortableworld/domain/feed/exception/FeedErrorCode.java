@@ -1,4 +1,4 @@
-package com.icomfortableworld.global.exception.feed;
+package com.icomfortableworld.domain.feed.exception;
 
 import lombok.Getter;
 
