@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SQLDelete(sql = "update feed set deleted_date = NOW() where feed_id=?")
+@SQLDelete(sql = "update feeds set deleted_date = NOW() where feed_id=?")
 @SQLRestriction(value = "deleted_date is NULL")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="feeds")
 public class Feed extends Timestamped {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
