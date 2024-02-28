@@ -106,18 +106,17 @@ public class FeedServiceImpl implements FeedService {
 			tagNameList.add(tagSetRepository.findByTagSetId(tag.getTagSetId()).getTagName());
 		}
 		MemberModel memberModel = memberRepository.findByIdOrElseThrow(feedModel.getMemberId());
-		//
-		// List<CommentModel> commentModelList = commentRepository.findByFeedId(feedId);
-		// List<CommentResponseDto> commentContentList = new ArrayList<>();
-		// for(CommentModel commentModel : commentModelList){
-		// 	MemberModel mModel =  memberRepository.findByIdOrElseThrow(commentModel.getMemberId());
-		// 	commentContentList.add(new CommentResponseDto(commentModel.getCommentId(),
-		// 		commentModel.getContent(), mModel.getNickname()));
-		// }
-		//
-		// return new CommentFeedResponseDto(feedModel.getFeedId(), memberModel.getNickname(),
-		// 	feedModel.getContent(), tagNameList, commentContentList);
-		return null;
+
+		List<CommentModel> commentModelList = commentRepository.findByFeedId(feedId);
+		List<CommentResponseDto> commentContentList = new ArrayList<>();
+		for(CommentModel commentModel : commentModelList){
+			MemberModel mModel =  memberRepository.findByIdOrElseThrow(commentModel.getMemberId());
+			commentContentList.add(new CommentResponseDto(commentModel.getContent(),
+					mModel.getNickname(),commentModel.getCommentId()));
+		}
+
+		return new CommentFeedResponseDto(feedModel.getFeedId(), memberModel.getNickname(),
+			feedModel.getContent(), tagNameList, commentContentList);
 	}
 
 	@Override
