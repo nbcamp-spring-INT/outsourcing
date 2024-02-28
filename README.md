@@ -10,7 +10,8 @@
 
 ## 2. API
 <img width="1150" alt="image" src="https://github.com/nbcamp-spring-INT/outsourcing/assets/97017924/615a1dd7-5527-4505-9428-9de711985191">
-<img width="1140" alt="image" src="https://github.com/nbcamp-spring-INT/outsourcing/assets/97017924/b3fd6fe8-ee23-4eb2-9160-ead78e3e2352">
+<img width="1166" alt="image" src="https://github.com/nbcamp-spring-INT/outsourcing/assets/97017924/b5d1f793-721f-433d-8e6e-b899bee510fa">
+
 
 ## 3. ERD
 ![image](https://github.com/nbcamp-spring-INT/outsourcing/assets/97017924/8fd85d34-0968-43dd-b40f-c68801180bff)
