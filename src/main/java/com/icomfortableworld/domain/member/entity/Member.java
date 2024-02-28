@@ -14,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,10 +23,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Builder
-@SQLDelete(sql = "update member set deleted_date = NOW() where id = ?")
+@SQLDelete(sql = "update members set deleted_date = NOW() where id = ?")
 @SQLRestriction(value = "deleted_date is NULL")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "members")
 public class Member extends Timestamped {
 
 	@Id
