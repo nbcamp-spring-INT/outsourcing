@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.entity.PasswordHistory;
+import com.icomfortableworld.domain.member.exception.CustomMemberException;
+import com.icomfortableworld.domain.member.exception.MemberErrorCode;
 import com.icomfortableworld.domain.member.model.MemberModel;
-import com.icomfortableworld.global.exception.member.CustomMemberException;
-import com.icomfortableworld.global.exception.member.MemberErrorCode;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,15 +1,12 @@
-package com.icomfortableworld.global.exception.member;
+package com.icomfortableworld.domain.feed.exception;
 
 import org.springframework.http.HttpStatus;
 
-import lombok.Getter;
-
-@Getter
-public class CustomMemberException extends RuntimeException {
+public class CustomFeedException extends RuntimeException {
 	private final HttpStatus status;
 	private final String message;
 
-	public CustomMemberException(final MemberErrorCode code) {
+	public CustomFeedException(final FeedErrorCode code) {
 		this.status = HttpStatus.BAD_REQUEST;
 		this.message = code.getMessage();
 	}

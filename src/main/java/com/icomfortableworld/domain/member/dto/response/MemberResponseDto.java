@@ -14,13 +14,15 @@ public class MemberResponseDto {
 	private String nickname;
 	private String introduction;
 	private MemberRoleEnum memberRoleEnum;
+	private Long followingCount;
 
-	public static MemberResponseDto from(MemberModel memberModel) {
+	public static MemberResponseDto from(MemberModel memberModel, Long followingCount) {
 		return MemberResponseDto.builder()
 			.username(memberModel.getUsername())
 			.email(memberModel.getEmail())
 			.nickname(memberModel.getNickname())
 			.introduction(memberModel.getIntroduction())
+			.followingCount(followingCount)
 			.memberRoleEnum(memberModel.getMemberRoleEnum())
 			.build();
 	}

@@ -38,21 +38,20 @@ public class FeedController {
 		return CommonResponseDto.of(HttpStatus.OK, "피드 작성 성공", null);
 	}
 
-	//관리자도 수정 가능
 	@PutMapping("/{feedId}")
 	public ResponseEntity<CommonResponseDto<FeedResponseDto>> updateFeed(@Valid @PathVariable Long feedId,
 		@RequestBody FeedRequestDto requestDto,
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 		FeedResponseDto responseDto = feedService.updateFeed(feedId, requestDto,
-			memberDetails.getMember().getMemberId(), memberDetails.getMember().getMemberRoleEnum().getAuthority());
+			memberDetails.getMember().getMemberId(), memberDetails.getMember().getMemberRoleEnum());
 		return CommonResponseDto.of(HttpStatus.OK, "피드 수정 성공", responseDto);
 	}
 
-	//관리자 -> 전체조회, 일반 -> 팔로우한 사람만 조회
 	@GetMapping
 	public ResponseEntity<CommonResponseDto<List<FeedResponseDto>>> getAllFeeds(
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-		List<FeedResponseDto> responseDto = feedService.getAllFeeds(memberDetails.getMember().getMemberId());
+		List<FeedResponseDto> responseDto = feedService.getAllFeeds(memberDetails.getMember().getMemberId(),
+			memberDetails.getMember().getMemberRoleEnum());
 		return CommonResponseDto.of(HttpStatus.OK, "전체 피드 조회 성공", responseDto);
 	}
 
@@ -63,18 +62,19 @@ public class FeedController {
 		return CommonResponseDto.of(HttpStatus.OK, "피드 조회 성공", responseDto);
 	}
 
-	@GetMapping("/search")
-	public ResponseEntity<CommonResponseDto<List<FeedResponseDto>>> getSearchResultFeeds(@RequestParam String q,
+	@GetMapping("/search/{type}")
+	public ResponseEntity<CommonResponseDto<List<FeedResponseDto>>> getSearchResultFeeds(
+		@PathVariable String type, @RequestParam String q,
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails){
-		List<FeedResponseDto> responseDto = feedService.getSearchResultFeeds(q, memberDetails.getMember().getMemberId());
+		List<FeedResponseDto> responseDto = feedService.getSearchResultFeeds(type, q,
+			memberDetails.getMember().getMemberId());
 		return CommonResponseDto.of(HttpStatus.OK, 	q+"에 대한 검색 결과", responseDto);
 	}
 
-	//관리자도 삭제 가능
 	@DeleteMapping("/{feedId}")
 	public ResponseEntity<CommonResponseDto<Void>> deleteFeed(@PathVariable Long feedId,
 		@AuthenticationPrincipal MemberDetailsImpl memberDetails){
-		feedService.deleteFeed(feedId, memberDetails.getMember().getMemberId(), memberDetails.getMember().getMemberRoleEnum().getAuthority());
+		feedService.deleteFeed(feedId, memberDetails.getMember().getMemberId(), memberDetails.getMember().getMemberRoleEnum());
 		return CommonResponseDto.of(HttpStatus.OK, "피드 삭제 성공", null);
 	}
 }

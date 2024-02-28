@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import com.icomfortableworld.domain.feed.entity.Feed;
 import com.icomfortableworld.domain.feed.model.FeedModel;
-import com.icomfortableworld.global.exception.feed.CustomFeedException;
-import com.icomfortableworld.global.exception.feed.FeedErrorCode;
+import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
+import com.icomfortableworld.domain.feed.exception.CustomFeedException;
+import com.icomfortableworld.domain.feed.exception.FeedErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,11 +36,11 @@ public class FeedRepositoryImpl implements FeedRepository {
 	}
 
 	@Override
-	public FeedModel update(Long feedId, Long memberId, String content, String authority) {
+	public FeedModel update(Long feedId, Long memberId, String content, MemberRoleEnum authority) {
 		Feed feed = feedJpaRepository.findById(feedId).orElseThrow(
 			() -> new CustomFeedException(FeedErrorCode.FEED_ERROR_CODE_NOT_FOUND)
 		);
-		if (!feed.getMemberId().equals(memberId) && !authority.equals("ROLE_ADMIN")) {
+		if (!feed.getMemberId().equals(memberId) && authority!=MemberRoleEnum.ADMIN) {
 			throw new CustomFeedException(FeedErrorCode.FEED_ERROR_CODE_ID_MISMATCH);
 		}
 		feed.update(content);
@@ -57,11 +58,11 @@ public class FeedRepositoryImpl implements FeedRepository {
 	}
 
 	@Override
-	public void deleteById(Long feedId, Long memberId, String authority) {
+	public void deleteById(Long feedId, Long memberId, MemberRoleEnum authority) {
 		Feed feed = feedJpaRepository.findById(feedId).orElseThrow(
 			() -> new CustomFeedException(FeedErrorCode.FEED_ERROR_CODE_NOT_FOUND)
 		);
-		if (!feed.getMemberId().equals(memberId) && !authority.equals("ROLE_ADMIN")) {
+		if (!feed.getMemberId().equals(memberId) && authority!=MemberRoleEnum.ADMIN) {
 			throw new CustomFeedException(FeedErrorCode.FEED_ERROR_CODE_ID_MISMATCH);
 		}
 		feedJpaRepository.deleteById(feedId);

@@ -12,13 +12,11 @@ import lombok.Getter;
 public class MemberUpdateResponseDto {
 	private String nickname;
 	private String introduction;
-	private String password;
 
 	public static MemberUpdateResponseDto from(MemberModel memberModel) {
 		return MemberUpdateResponseDto.builder()
 			.nickname(memberModel.getNickname())
 			.introduction(memberModel.getIntroduction())
-			.password(memberModel.getPassword())
 			.build();
 	}
 }

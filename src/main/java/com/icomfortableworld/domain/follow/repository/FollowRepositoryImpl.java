@@ -1,10 +1,10 @@
 package com.icomfortableworld.domain.follow.repository;
 
 import com.icomfortableworld.domain.follow.entity.Follow;
-import com.icomfortableworld.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -13,8 +13,8 @@ public class FollowRepositoryImpl implements FollowRepository {
     private final FollowJpaRepository followJpaRepository;
 
     @Override
-    public Optional<Follow> findById(Long followId) {
-        return followJpaRepository.findById(followId);
+    public Optional<Follow> findByFollowIdAndFromId(Long followId, Long fromId) {
+        return followJpaRepository.findByFollowIdAndFromId(followId, fromId);
     }
 
     @Override
@@ -26,4 +26,15 @@ public class FollowRepositoryImpl implements FollowRepository {
     public Follow save(Follow follow) {
         return followJpaRepository.save(follow);
     }
+
+    @Override
+    public void delete(Follow follow) {
+        followJpaRepository.delete(follow);
+    }
+
+    @Override
+    public List<Follow> findByFromId(Long memberId) {
+        return followJpaRepository.findByFromId(memberId);
+    }
+
 }

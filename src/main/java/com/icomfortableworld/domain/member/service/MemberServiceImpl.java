@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.icomfortableworld.domain.follow.repository.FollowRepository;
 import com.icomfortableworld.domain.member.dto.request.LoginRequestDto;
 import com.icomfortableworld.domain.member.dto.request.MemberUpdateRequestDto;
 import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
@@ -16,11 +17,11 @@ import com.icomfortableworld.domain.member.dto.response.MemberUpdateResponseDto;
 import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 import com.icomfortableworld.domain.member.entity.PasswordHistory;
+import com.icomfortableworld.domain.member.exception.CustomMemberException;
+import com.icomfortableworld.domain.member.exception.MemberErrorCode;
 import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
 import com.icomfortableworld.domain.member.repository.PasswordHistoryRepository;
-import com.icomfortableworld.global.exception.member.CustomMemberException;
-import com.icomfortableworld.global.exception.member.MemberErrorCode;
 import com.icomfortableworld.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,8 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordHistoryRepository passwordHistoryRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final FollowRepository followRepository;
+
 	private final JwtProvider jwtProvider;
 	@Value("${admin_token}")
 	private String adminToken;
@@ -84,7 +87,8 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional(readOnly = true)
 	public MemberResponseDto getMemeber(Long memberId) {
 		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
-		return MemberResponseDto.from(memberModel);
+		Long followerCount = getFollowingCount(memberId);
+		return MemberResponseDto.from(memberModel, followerCount);
 	}
 
 	@Override
@@ -104,5 +108,9 @@ public class MemberServiceImpl implements MemberService {
 
 		return MemberUpdateResponseDto.from(
 			memberRepository.updateMember(memberId, newNickname, newIntroduction, newPassword));
+	}
+
+	private Long getFollowingCount(Long memberId) {
+		return (long)followRepository.findByFromId(memberId).size();
 	}
 }
