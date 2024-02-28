@@ -36,8 +36,8 @@ public class CommentServiceImpl implements CommentService {
 
 	// READ
 	@Override
-	public List<CommentResponseDto> readComment(Long feedId,Long memberId) {
-		List<CommentModel> commentList = commentRepository.findAllByFeedId(feedId);
+	public List<CommentResponseDto> readComment(Long feedId, Long memberId) {
+		List<CommentModel> commentList = commentRepository.findByFeedId(feedId);
 		List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
 
 		for (CommentModel commentModel : commentList) {
@@ -49,28 +49,26 @@ public class CommentServiceImpl implements CommentService {
 		return commentResponseDtos;
 	}
 
-	// UPDATE
 	// @Transactional
 	// @Override
-	// public CommentResponseDto updateComment(Long commentId,CommentRequestDto commentRequestDto, Long memberId) {
-	// 	MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberDetails.getMemberId());
-	// 	FeedModel feedModel = feedRepository.findByIdOrElseThrow(commentModel.getFeedId());
-	//
-	// 	commentRepository.update(commentId,commentRequestDto);
-	//
-	// 	return new CommentResponseDto(comment, comment.getMember().getNickname());
-	//
-	// }
-
-	// DELETE
-	// public void deleteComment(CommentRequestDto commentRequestDto, Long memberId) {
-	//
+	// public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, Long memberId) {
 	// 	MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
-	// 	FeedModel feedModel = feedRepository.findByIdOrElseThrow(commentRequestDto.getFeedId());
+	// 	CommentModel commentModel = commentRepository.findByIdOrElseThrow(commentId);
 	//
+	// 	commentRepository.update(commentId, commentRequestDto);
 	//
-	// 	commentRepository.delete(comment);
+	// 	return new CommentResponseDto(commentModel, commentModel.getMember().getNickname());
+	// }
+	//
+	// public void deleteComment(Long commentId, Long feedId, Long memberId) {
+	// 	MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
+	// 	FeedModel feedModel = feedRepository.findByIdOrElseThrow(feedId);
+	//
+	// 	commentRepository.delete(CommentModel.builder().build());
+	// }
+}
 
-	}
+
+
 
 

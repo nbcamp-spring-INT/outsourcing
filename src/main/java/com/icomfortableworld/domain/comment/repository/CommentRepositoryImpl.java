@@ -2,7 +2,6 @@ package com.icomfortableworld.domain.comment.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -28,20 +27,20 @@ public class CommentRepositoryImpl implements CommentRepository {
 		return commentJpaRepository.save(comment).toModel();
 	}
 
+	@Override
+	public List<CommentModel> findByFeedId(Long feedId) {
+		return commentJpaRepository.findByFeedId(feedId);
+	}
+
 	// @Override
-	// public CommentModel delete(Comment comment) {
-	// 	return null;
+	// public void update(Long commentId, CommentRequestDto commentRequestDto) {
+	//
 	// }
 
-	@Override
-	public List<Comment> findAllByFeedId(Long feedId) {
-		return null;
-	}
-
-	@Override
-	public Optional<Object> findByCommentId(Long commentId) {
-		return Optional.empty();
-	}
+	// @Override
+	// public CommentModel delete(Comment comment) {
+	// 	return commentJpaRepository.delete(comment);
+	// }
 }
 
 

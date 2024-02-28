@@ -3,6 +3,7 @@ package com.icomfortableworld.domain.feed.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.icomfortableworld.domain.comment.model.CommentModel;
 import com.icomfortableworld.domain.feed.entity.Feed;
 import com.icomfortableworld.domain.feed.model.FeedModel;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
@@ -23,4 +24,5 @@ public interface FeedRepository {
 	void deleteById(Long feedId, Long memberId, MemberRoleEnum authority);
 
 	List<FeedModel> findByMemberId(Long toId);
+
 }
