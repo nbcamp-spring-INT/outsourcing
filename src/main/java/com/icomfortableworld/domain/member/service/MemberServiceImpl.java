@@ -1,5 +1,6 @@
 package com.icomfortableworld.domain.member.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,8 @@ import com.icomfortableworld.domain.member.exception.MemberErrorCode;
 import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
 import com.icomfortableworld.domain.member.repository.PasswordHistoryRepository;
+import com.icomfortableworld.domain.message.entity.Message;
+import com.icomfortableworld.domain.message.repository.MessageJpaRepository;
 import com.icomfortableworld.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +36,7 @@ public class MemberServiceImpl implements MemberService {
 	private final PasswordHistoryRepository passwordHistoryRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final FollowRepository followRepository;
+	private final MessageJpaRepository messageJpaRepository;
 
 	private final JwtProvider jwtProvider;
 	@Value("${admin_token}")
@@ -73,7 +77,10 @@ public class MemberServiceImpl implements MemberService {
 			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_PASSWORD_MISMATCH);
 		}
 		String token = jwtProvider.createToken(memberModel.getUsername(), memberModel.getMemberRoleEnum());
-		return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token);
+		List<Message> messageList = messageJpaRepository.findByUsernameAndIsReadFalse(loginRequestDto.getUsername());
+		for (Message message : messageList) {
+			message.readMessage();
+			return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token, messageList);
 	}
 
 	@Override
