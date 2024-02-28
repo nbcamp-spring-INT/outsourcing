@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.icomfortableworld.common.dto.CommonResponseDto;
 import com.icomfortableworld.global.exception.dto.ErrorResponseDto;
-import com.icomfortableworld.global.exception.feed.CustomFeedException;
+import com.icomfortableworld.domain.feed.exception.CustomFeedException;
 import com.icomfortableworld.global.exception.jwt.CustomJwtException;
 import com.icomfortableworld.global.exception.member.CustomMemberException;
 
