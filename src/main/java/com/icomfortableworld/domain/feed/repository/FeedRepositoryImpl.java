@@ -57,6 +57,7 @@ public class FeedRepositoryImpl implements FeedRepository {
 		return feedJpaRepository.findById(feedId).stream().map(Feed::toModel).toList();
 	}
 
+
 	@Override
 	public void deleteById(Long feedId, Long memberId, MemberRoleEnum authority) {
 		Feed feed = feedJpaRepository.findById(feedId).orElseThrow(
@@ -66,6 +67,11 @@ public class FeedRepositoryImpl implements FeedRepository {
 			throw new CustomFeedException(FeedErrorCode.FEED_ERROR_CODE_ID_MISMATCH);
 		}
 		feedJpaRepository.deleteById(feedId);
+	}
+
+	@Override
+	public List<FeedModel> findByMemberId(Long toId) {
+		return feedJpaRepository.findByMemberId(toId);
 	}
 
 }
