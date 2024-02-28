@@ -1,20 +1,30 @@
 package com.icomfortableworld.domain.comment.dto;
 
 import com.icomfortableworld.domain.comment.entity.Comment;
+import com.icomfortableworld.domain.comment.model.CommentModel;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CommentResponseDto {
 
-	private Long commentId;
-	private String comment;
+	private String content;
 	private String nickname;
+	private Long commentId;
 
-	public CommentResponseDto(Comment comment, String nickname) {
-		this.commentId = comment.getCommentId();
-		this.comment = comment.getContent();
-		this.nickname = nickname;
+	public static CommentResponseDto convertToDto(CommentModel commentmodel,String nickname) {
+		return CommentResponseDto.builder()
+			.content(commentmodel.getContent())
+			.nickname(nickname)
+			.commentId(commentmodel.getCommentId())
+			.build();
 	}
 }

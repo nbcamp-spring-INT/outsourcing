@@ -1,8 +1,8 @@
 package com.icomfortableworld.domain.comment.dto;
 
-import com.icomfortableworld.common.entity.Timestamped;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentRequestDto {
-
-	@NotBlank
+public class CommentDto {
+	private String nickName;
 	private String content;
-	private Long feedId;
+	private LocalDateTime createdTime;
+
 }

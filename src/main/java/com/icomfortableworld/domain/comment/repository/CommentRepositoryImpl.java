@@ -1,8 +1,14 @@
 package com.icomfortableworld.domain.comment.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.icomfortableworld.domain.comment.entity.Comment;
+import com.icomfortableworld.domain.comment.model.CommentModel;
+import com.icomfortableworld.domain.feed.repository.FeedRepository;
+import com.icomfortableworld.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,16 +17,34 @@ import lombok.RequiredArgsConstructor;
 
 public class CommentRepositoryImpl implements CommentRepository {
 	private final CommentJpaRepository commentJpaRepository;
-
-	// @Override
-	// public Optional<Comment> findById(Long commentId) {
-	// 	return commentRepository.findById(commentId);
-	// }
+	private final FeedRepository feedRepository;
+	private final MemberRepository memberRepository;
+	private List<Comment> comments = new ArrayList<>();
 
 	@Override
-	public Comment save(Comment comment) {
-		return commentJpaRepository.save(comment);
+	public CommentModel save(Comment comment) {
+
+		return commentJpaRepository.save(comment).toModel();
 	}
+
+	@Override
+	public List<CommentModel> findByFeedId(Long feedId) {
+		return commentJpaRepository.findByFeedId(feedId);
+	}
+
+	// @Override
+	// public void update(Long commentId, CommentRequestDto commentRequestDto) {
+	//
+	// }
+
+	// @Override
+	// public CommentModel delete(Comment comment) {
+	// 	return commentJpaRepository.delete(comment);
+	// }
 }
+
+
+
+
 
 
