@@ -6,8 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
-import com.icomfortableworld.domain.comment.model.CommentModel;
 import com.icomfortableworld.domain.comment.repository.CommentRepository;
 import com.icomfortableworld.domain.feed.dto.requestDto.FeedRequestDto;
 import com.icomfortableworld.domain.feed.dto.responseDto.CommentFeedResponseDto;
@@ -15,14 +13,15 @@ import com.icomfortableworld.domain.feed.dto.responseDto.FeedResponseDto;
 import com.icomfortableworld.domain.feed.entity.Feed;
 import com.icomfortableworld.domain.feed.model.FeedModel;
 import com.icomfortableworld.domain.feed.repository.FeedRepository;
+import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
 import com.icomfortableworld.domain.tag.entity.Tag;
 import com.icomfortableworld.domain.tag.entity.TagSet;
 import com.icomfortableworld.domain.tag.repository.TagRepository;
 import com.icomfortableworld.domain.tag.repository.TagSetRepository;
-import com.icomfortableworld.global.exception.feed.CustomFeedException;
-import com.icomfortableworld.global.exception.feed.FeedErrorCode;
+import com.icomfortableworld.domain.feed.exception.CustomFeedException;
+import com.icomfortableworld.domain.feed.exception.FeedErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +42,6 @@ public class FeedServiceImpl implements FeedService {
 		FeedModel feedModel = feedRepository.save(new Feed(requestDto, memberId)).toModel();
 
 		for (String tagName : requestDto.getTagNameList()) {
-			//없으면 만들어주기~
 			TagSet tagSet = tagSetRepository.findByTagName(tagName).orElse(null);
 			if (tagSet == null) {
 				tagSet = tagSetRepository.save(new TagSet(tagName));
@@ -55,7 +53,7 @@ public class FeedServiceImpl implements FeedService {
 
 	@Override
 	public FeedResponseDto updateFeed(Long feedId, FeedRequestDto requestDto, Long memberId,
-		String memberRole) {
+		MemberRoleEnum memberRole) {
 		memberRepository.findByIdOrElseThrow(memberId);
 		String content = requestDto.getContent();
 
@@ -64,9 +62,13 @@ public class FeedServiceImpl implements FeedService {
 		return new FeedResponseDto(feedModel.getContent(), new ArrayList<>());
 	}
 
+	//관리자 -> 전체조회, 일반 -> 팔로우한 사람만 조회
 	@Override
-	public List<FeedResponseDto> getAllFeeds(Long memberId) {
+	@Transactional(readOnly = true)
+	public List<FeedResponseDto> getAllFeeds(Long memberId, MemberRoleEnum memberRoleEnum) {
 		memberRepository.findByIdOrElseThrow(memberId);
+
+
 
 		List<FeedModel> feedModels = feedRepository.findAll();
 		List<String> tagNameList = new ArrayList<>();
@@ -89,6 +91,7 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public CommentFeedResponseDto getFeed(Long feedId,Long memberId) {
 		memberRepository.findByIdOrElseThrow(memberId);
 
@@ -100,58 +103,66 @@ public class FeedServiceImpl implements FeedService {
 			tagNameList.add(tagSetRepository.findByTagSetId(tag.getTagSetId()).getTagName());
 		}
 		MemberModel memberModel = memberRepository.findByIdOrElseThrow(feedModel.getMemberId());
-
-		List<CommentModel> commentModelList = commentRepository.findByFeedId(feedId);
-		List<CommentResponseDto> commentContentList = new ArrayList<>();
-		for(CommentModel commentModel : commentModelList){
-			MemberModel mModel =  memberRepository.findByIdOrElseThrow(commentModel.getMemberId());
-			commentContentList.add(new CommentResponseDto(commentModel.getCommentId(),
-				commentModel.getContent(), mModel.getNickname()));
-		}
-
-		return new CommentFeedResponseDto(feedModel.getFeedId(), memberModel.getNickname(),
-			feedModel.getContent(), tagNameList, commentContentList);
+		//
+		// List<CommentModel> commentModelList = commentRepository.findByFeedId(feedId);
+		// List<CommentResponseDto> commentContentList = new ArrayList<>();
+		// for(CommentModel commentModel : commentModelList){
+		// 	MemberModel mModel =  memberRepository.findByIdOrElseThrow(commentModel.getMemberId());
+		// 	commentContentList.add(new CommentResponseDto(commentModel.getCommentId(),
+		// 		commentModel.getContent(), mModel.getNickname()));
+		// }
+		//
+		// return new CommentFeedResponseDto(feedModel.getFeedId(), memberModel.getNickname(),
+		// 	feedModel.getContent(), tagNameList, commentContentList);
+		return null;
 	}
 
-	//한글 조회 안됨 이슈...
 	@Override
-	public List<FeedResponseDto> getSearchResultFeeds(String q, Long memberId) {
+	@Transactional(readOnly = true)
+	public List<FeedResponseDto> getSearchResultFeeds(String type, String q, Long memberId) {
 		memberRepository.findByIdOrElseThrow(memberId);
 		List<FeedResponseDto> responseDtoList = new ArrayList<>();
 
-		//tag로 조회
-		TagSet tagSet = tagSetRepository.findByTagName(q).orElse(null);
-		if(tagSet!=null){
-			List<Tag> tagList =tagRepository.findAllByTagSetId(tagSet.getTagSetId());
+		if(type.equals("tag")) {
+			//tag로 조회
+			TagSet tagSet = tagSetRepository.findByTagName(q).orElse(null);
+			if (tagSet != null) {
+				List<Tag> tagList = tagRepository.findAllByTagSetId(tagSet.getTagSetId());
 
-			for(Tag tag : tagList){
-				FeedModel feedModel = feedRepository.findByIdOrElseThrow(tag.getFeedId());
-				MemberModel memberModel = memberRepository.findByIdOrElseThrow(feedModel.getMemberId());
-				List<Tag> feedTagList = tagRepository.findAllByFeedId(feedModel.getFeedId());
+				for (Tag tag : tagList) {
+					FeedModel feedModel = feedRepository.findById(tag.getFeedId()).orElse(null);
+					if (feedModel == null) {
+						continue;
+					}
 
-				List<String> tagNameList = new ArrayList<>();
+					MemberModel memberModel = memberRepository.findByIdOrElseThrow(feedModel.getMemberId());
+					List<Tag> feedTagList = tagRepository.findAllByFeedId(feedModel.getFeedId());
 
-				for(Tag t : feedTagList){
-					TagSet tSet = tagSetRepository.findByTagSetId(t.getTagSetId());
-					tagNameList.add(tSet.getTagName());
+					List<String> tagNameList = new ArrayList<>();
+
+					for (Tag t : feedTagList) {
+						TagSet tSet = tagSetRepository.findByTagSetId(t.getTagSetId());
+						tagNameList.add(tSet.getTagName());
+					}
+					responseDtoList.add(new FeedResponseDto(feedModel.getFeedId(),
+						memberModel.getNickname(), feedModel.getContent(), tagNameList));
 				}
-				responseDtoList.add(new FeedResponseDto(feedModel.getFeedId(),
-					memberModel.getNickname() , feedModel.getContent(), tagNameList));
 			}
-		}
-
-		//단어로 내용 content에서 조회
-		List<FeedModel> allFeeds = feedRepository.findAll();
-		for(FeedModel feedModel : allFeeds){
-			if(feedModel.getContent().contains(q)){
-				List<Tag> tagList = tagRepository.findAllByFeedId(feedModel.getFeedId());
-				List<String> tagNameList = new ArrayList<>();
-				for(Tag t : tagList){
-					TagSet tSet = tagSetRepository.findByTagSetId(t.getTagSetId());
-					tagNameList.add(tSet.getTagName());
+		}else {
+			//단어로 내용 content에서 조회
+			List<FeedModel> allFeeds = feedRepository.findAll();
+			for (FeedModel feedModel : allFeeds) {
+				if (feedModel.getContent().contains(q)) {
+					List<Tag> tagList = tagRepository.findAllByFeedId(feedModel.getFeedId());
+					List<String> tagNameList = new ArrayList<>();
+					for (Tag t : tagList) {
+						TagSet tSet = tagSetRepository.findByTagSetId(t.getTagSetId());
+						tagNameList.add(tSet.getTagName());
+					}
+					responseDtoList.add(new FeedResponseDto(feedModel.getFeedId(),
+						memberRepository.findByIdOrElseThrow(feedModel.getMemberId()).getNickname(),
+						feedModel.getContent(), tagNameList));
 				}
-				responseDtoList.add(new FeedResponseDto(feedModel.getFeedId(),
-					memberRepository.findByIdOrElseThrow(feedModel.getMemberId()).getNickname() , feedModel.getContent(), tagNameList));
 			}
 		}
 
@@ -162,7 +173,7 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
-	public void deleteFeed(Long feedId, Long memberId, String authority) {
+	public void deleteFeed(Long feedId, Long memberId, MemberRoleEnum authority) {
 		memberRepository.findByIdOrElseThrow(memberId);
 
 		feedRepository.deleteById(feedId, memberId, authority);

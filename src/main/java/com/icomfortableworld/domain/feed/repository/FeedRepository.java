@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.icomfortableworld.domain.feed.entity.Feed;
 import com.icomfortableworld.domain.feed.model.FeedModel;
+import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 
 public interface FeedRepository {
 	Feed save(Feed feed);
@@ -13,11 +14,11 @@ public interface FeedRepository {
 
 	Optional<FeedModel> findById(Long feedId);
 
-	FeedModel update(Long feedId, Long memberId, String content, String memberRole);
+	FeedModel update(Long feedId, Long memberId, String content, MemberRoleEnum memberRole);
 
 	List<FeedModel> findAll();
 
 	List<FeedModel> findAllById(Long feedId);
 
-	void deleteById(Long feedId, Long memberId, String authority);
+	void deleteById(Long feedId, Long memberId, MemberRoleEnum authority);
 }
