@@ -77,11 +77,11 @@ public class MemberServiceImpl implements MemberService {
 			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_PASSWORD_MISMATCH);
 		}
 		String token = jwtProvider.createToken(memberModel.getUsername(), memberModel.getMemberRoleEnum());
-		List<Message> messageList = messageJpaRepository.findByToNameAndReadFalse(loginRequestDto.getUsername());
+		List<Message> messageList = messageJpaRepository.findByToNameAndIsReadFalse(loginRequestDto.getUsername());
 		for (Message message : messageList) {
 			message.readMessage();
 		}
-			return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token, messageList);
+		return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token, messageList);
 	}
 
 	@Override
