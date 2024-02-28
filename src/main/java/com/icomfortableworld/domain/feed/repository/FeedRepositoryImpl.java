@@ -71,7 +71,7 @@ public class FeedRepositoryImpl implements FeedRepository {
 
 	@Override
 	public List<FeedModel> findByMemberId(Long toId) {
-		return feedJpaRepository.findByMemberId(toId);
+		return feedJpaRepository.findAllByMemberId(toId).stream().map(Feed::toModel).toList();
 	}
 
 }

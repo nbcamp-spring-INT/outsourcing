@@ -79,14 +79,14 @@ public class FeedServiceImpl implements FeedService {
 			List<FeedModel> feedModels = feedRepository.findAll();
 
 			//여기부터 밑 함수
-			response = getAllFeedsIncludingTags(feedModels);
+			response.addAll(getAllFeedsIncludingTags(feedModels));
 		}else{
 			List<Follow> followList = followRepository.findByFromId(memberId);
 			for(Follow f : followList){
 				Long toId = f.getToId();
 				List<FeedModel> feedModels = feedRepository.findByMemberId(toId);
 				//이렇게 해도 됨? 위에 코드랑 중복쓰
-				response = getAllFeedsIncludingTags(feedModels);
+				response.addAll(getAllFeedsIncludingTags(feedModels));
 			}
 		}
 
@@ -178,7 +178,6 @@ public class FeedServiceImpl implements FeedService {
 	public void deleteFeed(Long feedId, Long memberId, MemberRoleEnum authority) {
 		memberRepository.findByIdOrElseThrow(memberId);
 		commentRepository.deleteByFeedId(feedId);
-
 		feedRepository.deleteById(feedId, memberId, authority);
 	}
 
