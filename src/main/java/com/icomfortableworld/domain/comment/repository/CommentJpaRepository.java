@@ -10,4 +10,6 @@ import com.icomfortableworld.domain.comment.model.CommentModel;
 public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
 
 	List<CommentModel> findByFeedId(Long feedId);
+
+	void deleteAllByFeedId(Long feedId);
 }

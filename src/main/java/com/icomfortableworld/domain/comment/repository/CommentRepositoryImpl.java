@@ -30,6 +30,9 @@ public class CommentRepositoryImpl implements CommentRepository {
 
 		return commentJpaRepository.save(comment).toModel();
 	}
+	public void deleteByFeedId(Long feedId) {
+		commentJpaRepository.deleteAllByFeedId(feedId);
+	}
 
 	@Override
 	public List<CommentModel> findByFeedId(Long feedId) {

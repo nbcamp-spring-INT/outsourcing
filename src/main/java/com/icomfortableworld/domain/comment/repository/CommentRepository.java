@@ -19,4 +19,6 @@ public interface CommentRepository {
 	CommentModel update(Long commentId, CommentRequestUpdateDto commentRequestUpdateDto);
 
 	Optional<CommentModel> findById(Long commentId);
+
+	void deleteByFeedId (Long feedId);
 }
