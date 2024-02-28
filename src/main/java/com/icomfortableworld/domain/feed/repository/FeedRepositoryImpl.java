@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
+import com.icomfortableworld.domain.comment.repository.CommentRepository;
 import com.icomfortableworld.domain.feed.entity.Feed;
 import com.icomfortableworld.domain.feed.model.FeedModel;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
@@ -17,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 @Repository
 public class FeedRepositoryImpl implements FeedRepository {
 	private final FeedJpaRepository feedJpaRepository;
-
 	@Override
 	public Feed save(Feed feed) {
 		return feedJpaRepository.save(feed);
@@ -71,7 +71,7 @@ public class FeedRepositoryImpl implements FeedRepository {
 
 	@Override
 	public List<FeedModel> findByMemberId(Long toId) {
-		return feedJpaRepository.findByMemberId(toId);
+		return feedJpaRepository.findAllByMemberId(toId).stream().map(Feed::toModel).toList();
 	}
 
 }
