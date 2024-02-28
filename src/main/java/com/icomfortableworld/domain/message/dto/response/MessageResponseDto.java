@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageResponseDto {
-    private Long senderId;
+    private String fromName;
     private String content;
 
     public MessageResponseDto(Message message) {
-        this.senderId = message.getSenderId();
+        this.fromName = message.getFromName();
         this.content = message.getContent();
     }
 }

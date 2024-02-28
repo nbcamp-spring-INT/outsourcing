@@ -18,18 +18,24 @@ public class Message extends Timestamped {
     private Long messageId;
 
     @Column(nullable = false)
-    private Long senderId;
+    private String fromName;
 
     @Column(nullable = false)
-    private Long receiverId;
+    private String toName;
 
     @Column(nullable = false, length = 40)
     private String content;
 
-    public Message(MessageRequestDto requestDto,Long senderId){
+    @Column(nullable = false)
+    private boolean isRead;
+
+    public Message(MessageRequestDto requestDto,String fromName){
         this.content=requestDto.getContent();
-        this.senderId=senderId;
+        this.fromName=fromName;
+        this.isRead = false;
     }
 
-
+    public void readMessage(){
+        this.isRead = true;
+    }
 }
