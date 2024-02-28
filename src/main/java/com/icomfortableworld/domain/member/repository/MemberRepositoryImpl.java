@@ -56,6 +56,11 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 
 	@Override
+	public List<MemberModel> findAll() {
+		return jpaRepository.findAll().stream().map(Member::toModel).toList();
+	}
+
+	@Override
 	public MemberModel updateMember(Long memberId, String newNickname, String newIntroduction, String newPassword) {
 		Member member = jpaRepository.findById(memberId).orElse(null);
 		if (member == null) {

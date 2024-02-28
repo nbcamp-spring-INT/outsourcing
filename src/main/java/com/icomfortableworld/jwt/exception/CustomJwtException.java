@@ -1,4 +1,4 @@
-package com.icomfortableworld.global.exception.jwt;
+package com.icomfortableworld.jwt.exception;
 
 import org.springframework.http.HttpStatus;
 

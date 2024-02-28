@@ -1,5 +1,6 @@
 package com.icomfortableworld.domain.member.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.icomfortableworld.domain.member.entity.Member;
@@ -20,4 +21,6 @@ public interface MemberRepository {
 	MemberModel save(Member member);
 
 	MemberModel updateMember(Long memberId, String newNickname, String newIntroduction, String newPassword);
+
+	List<MemberModel> findAll();
 }

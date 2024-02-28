@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
+import com.icomfortableworld.jwt.exception.CustomJwtException;
+import com.icomfortableworld.jwt.exception.JwtErrorCode;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -74,20 +76,22 @@ public class JwtProvider {
 		return null;
 	}
 
-	public boolean validateToken(String token) {
+	public void validateToken(String token) {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-			return true;
 		} catch (SecurityException | MalformedJwtException | SignatureException e) {
 			log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+			throw new CustomJwtException(JwtErrorCode.JWT_ERROR_CODE_SIGNATURE_EXCEPTION);
 		} catch (ExpiredJwtException e) {
 			log.error("Expired JWT token, 만료된 JWT token 입니다.");
+			throw new CustomJwtException(JwtErrorCode.JWT_ERROR_CODE_EXPIRED_EXCEPTION);
 		} catch (UnsupportedJwtException e) {
 			log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+			throw new CustomJwtException(JwtErrorCode.JWT_ERROR_CODE_UNSUPPORTED_TOKEN_EXCEPTION);
 		} catch (IllegalArgumentException e) {
 			log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+			throw new CustomJwtException(JwtErrorCode.JWT_ERROR_CODE_INVALID_TOKEN_EXCEPTION);
 		}
-		return false;
 	}
 
 	public Claims getUserInfoFromToken(String token) {

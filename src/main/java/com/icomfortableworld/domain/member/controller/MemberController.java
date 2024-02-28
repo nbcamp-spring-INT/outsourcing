@@ -1,5 +1,7 @@
 package com.icomfortableworld.domain.member.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -63,6 +65,12 @@ public class MemberController {
 		return CommonResponseDto.of(HttpStatus.OK, "회원 정보조회 성공", memberService.getMemeber(memberId));
 	}
 
+	@GetMapping
+	public ResponseEntity<CommonResponseDto<List<MemberResponseDto>>> getMembers(
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+		return CommonResponseDto.of(HttpStatus.OK, "모든회원 정보조회 성공", memberService.getMemebers(
+			memberDetails.getMember().getMemberRoleEnum()));
+	}
 	@PutMapping("{memberId}")
 	public ResponseEntity<CommonResponseDto<MemberUpdateResponseDto>> updateMember(@PathVariable Long memberId,
 		@Valid @RequestBody MemberUpdateRequestDto memberUpdateRequestDto,
