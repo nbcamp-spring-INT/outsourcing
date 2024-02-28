@@ -37,12 +37,8 @@ public class Feed extends Timestamped {
 	@Column(nullable = false, length = 140)
 	private String content;
 
-	@Column(nullable = false)
-	private Long likeCount;
-
 	public Feed(FeedRequestDto requestDto, Long memberId) {
 		this.content = requestDto.getContent();
-		this.likeCount = 0L;
 		this.memberId = memberId;
 	}
 
@@ -51,7 +47,6 @@ public class Feed extends Timestamped {
 			.feedId(feedId)
 			.memberId(memberId)
 			.content(content)
-			.likeCount(likeCount)
 			.createdDate(this.getCreatedDate())
 			.updatedDate(this.getUpdatedDate())
 			.deletedDate(this.getDeletedDate())
