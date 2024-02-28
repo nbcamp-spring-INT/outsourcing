@@ -5,10 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
 import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
-import com.icomfortableworld.domain.comment.entity.Comment;
 import com.icomfortableworld.domain.comment.repository.CommentRepository;
 import com.icomfortableworld.domain.feed.repository.FeedRepository;
-import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,10 +21,10 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public ResponseEntity<CommentResponseDto> createComment(CommentRequestDto commentRequestDto,
 		Long memberId) {
-		Member member = memberRepository.findByIdOrElseThrow(memberId);
-		// Feed feed = feedRepository.find
-		Comment saveComment = new Comment(commentRequestDto.getContent(), member.getMemberId(), 1L);
-		commentRepository.save(saveComment);
+		// Member member = memberRepository.findByIdOrElseThrow(memberId);
+		// // Feed feed = feedRepository.find
+		// Comment saveComment = new Comment(commentRequestDto.getContent(), member.getMemberId(), 1L);
+		// commentRepository.save(saveComment);
 
 		return null;
 	}

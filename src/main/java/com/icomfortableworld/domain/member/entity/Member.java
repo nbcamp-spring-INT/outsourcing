@@ -74,4 +74,16 @@ public class Member extends Timestamped {
 			.createdDate(this.getCreatedDate())
 			.build();
 	}
+
+	public void updateNickname(String newNickname) {
+		this.nickname = newNickname;
+	}
+
+	public void updateIntroduction(String newIntroduction) {
+		this.introduction = newIntroduction;
+	}
+
+	public void updatePassword(String newPassword) {
+		this.password = newPassword;
+	}
 }

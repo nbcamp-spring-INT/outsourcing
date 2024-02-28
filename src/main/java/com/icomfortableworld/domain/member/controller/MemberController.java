@@ -6,16 +6,21 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.icomfortableworld.common.dto.CommonResponseDto;
 import com.icomfortableworld.domain.member.dto.request.LoginRequestDto;
+import com.icomfortableworld.domain.member.dto.request.MemberUpdateRequestDto;
 import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberResponseDto;
+import com.icomfortableworld.domain.member.dto.response.MemberUpdateResponseDto;
 import com.icomfortableworld.domain.member.service.MemberService;
+import com.icomfortableworld.global.exception.member.CustomMemberException;
+import com.icomfortableworld.global.exception.member.MemberErrorCode;
 import com.icomfortableworld.jwt.JwtProvider;
 import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
@@ -29,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
+
 	@PostMapping("/signup")
 	public ResponseEntity<CommonResponseDto<Void>> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
 		memberService.signup(signupRequestDto);
@@ -44,16 +50,26 @@ public class MemberController {
 	}
 
 	@PostMapping("/logout")
-	public ResponseEntity<CommonResponseDto<Void>> logout(HttpServletResponse response, @AuthenticationPrincipal
-	MemberDetailsImpl memberDetails) {
+	public ResponseEntity<CommonResponseDto<Void>> logout(HttpServletResponse response,
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 		String logoutToken = memberService.logout(memberDetails.getUsername());
 		response.addHeader(JwtProvider.AUTHORIZATION_HEADER, logoutToken);
 		return CommonResponseDto.of(HttpStatus.OK, "로그아웃 성공", null);
 	}
 
 	@GetMapping("/{memberId}")
-	public ResponseEntity<CommonResponseDto<MemberResponseDto>> getMember(
-		@PathVariable("memberId") Long memberId) {
-		return CommonResponseDto.of(HttpStatus.OK, "회원정보조회 성공", memberService.getMemeber(memberId));
+	public ResponseEntity<CommonResponseDto<MemberResponseDto>> getMember(@PathVariable("memberId") Long memberId) {
+		return CommonResponseDto.of(HttpStatus.OK, "회원 정보조회 성공", memberService.getMemeber(memberId));
+	}
+
+	@PutMapping("{memberId}")
+	public ResponseEntity<CommonResponseDto<MemberUpdateResponseDto>> updateMember(@PathVariable Long memberId,
+		@Valid @RequestBody MemberUpdateRequestDto memberUpdateRequestDto,
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+		if (!memberDetails.getMember().getMemberId().equals(memberId)) {
+			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_MEMBER_ID_MISMATCH);
+		}
+		return CommonResponseDto.of(HttpStatus.OK, "회원 정보수정 성공",
+			memberService.updateMember(memberId, memberUpdateRequestDto));
 	}
 }

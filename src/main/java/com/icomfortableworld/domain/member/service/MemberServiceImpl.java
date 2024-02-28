@@ -8,13 +8,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.icomfortableworld.domain.member.dto.request.LoginRequestDto;
+import com.icomfortableworld.domain.member.dto.request.MemberUpdateRequestDto;
 import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberResponseDto;
+import com.icomfortableworld.domain.member.dto.response.MemberUpdateResponseDto;
 import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
+import com.icomfortableworld.domain.member.entity.PasswordHistory;
 import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
+import com.icomfortableworld.domain.member.repository.PasswordHistoryRepository;
 import com.icomfortableworld.global.exception.member.CustomMemberException;
 import com.icomfortableworld.global.exception.member.MemberErrorCode;
 import com.icomfortableworld.jwt.JwtProvider;
@@ -27,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
+	private final PasswordHistoryRepository passwordHistoryRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
 	@Value("${admin_token}")
@@ -56,8 +61,8 @@ public class MemberServiceImpl implements MemberService {
 			role = MemberRoleEnum.ADMIN;
 		}
 
-		Member member = Member.of(signupRequestDto, password, role);
-		memberRepository.save(member);
+		MemberModel memberModel = memberRepository.save(Member.of(signupRequestDto, password, role));
+		passwordHistoryRepository.save(PasswordHistory.of(memberModel.getMemberId(), password));
 	}
 
 	@Override
@@ -76,8 +81,28 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public MemberResponseDto getMemeber(Long memberId) {
 		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
 		return MemberResponseDto.from(memberModel);
+	}
+
+	@Override
+	public MemberUpdateResponseDto updateMember(Long memberId, MemberUpdateRequestDto memberUpdateRequestDto) {
+		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
+		if (!passwordEncoder.matches(memberUpdateRequestDto.getPassword(), memberModel.getPassword())) {
+			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_PASSWORD_MISMATCH);
+		}
+
+		if (passwordEncoder.matches(memberUpdateRequestDto.getNewPassword(), memberModel.getPassword())) {
+			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_PASSWORD_MATCH);
+		}
+
+		String newNickname = memberUpdateRequestDto.getNickname();
+		String newIntroduction = memberUpdateRequestDto.getIntroduction();
+		String newPassword = memberUpdateRequestDto.getNewPassword();
+
+		return MemberUpdateResponseDto.from(
+			memberRepository.updateMember(memberId, newNickname, newIntroduction, newPassword));
 	}
 }
