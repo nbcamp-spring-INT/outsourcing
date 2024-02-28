@@ -1,5 +1,6 @@
 package com.icomfortableworld.domain.message.service;
 
+import com.icomfortableworld.domain.member.model.MemberModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class MessageServiceImpl implements MessageService {
         if (senderId.equals(receiverId)) {
             throw new IllegalArgumentException("자신에게 메시지를 보낼 수 없습니다.");
         }
-		// Member receiver = memberRepository.findByIdOrElseThrow(receiverId);
+        MemberModel receiver = memberRepository.findByIdOrElseThrow(receiverId);
 
         Message message = new Message();
         message.setSenderId(senderId);

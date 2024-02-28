@@ -1,5 +1,6 @@
 package com.icomfortableworld.domain.feed.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.icomfortableworld.domain.feed.entity.Feed;
@@ -13,4 +14,6 @@ public interface FeedRepository {
 	Optional<FeedModel> findById(Long feedId);
 
 	FeedModel update(Long feedId, Long memberId, String content);
+
+	List<FeedModel> findAll();
 }

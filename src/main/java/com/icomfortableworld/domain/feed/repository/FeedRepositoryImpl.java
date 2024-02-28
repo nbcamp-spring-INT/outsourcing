@@ -1,5 +1,6 @@
 package com.icomfortableworld.domain.feed.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -43,6 +44,11 @@ public class FeedRepositoryImpl implements FeedRepository {
 		}
 		feed.update(content);
 		return feed.toModel();
+	}
+
+	@Override
+	public List<FeedModel> findAll() {
+		return feedJpaRepository.findAll().stream().map(Feed::toModel).toList();
 	}
 
 }
