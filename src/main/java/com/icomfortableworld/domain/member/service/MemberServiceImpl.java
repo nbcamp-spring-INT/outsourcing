@@ -1,6 +1,9 @@
 package com.icomfortableworld.domain.member.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +17,7 @@ import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberUpdateResponseDto;
+import com.icomfortableworld.domain.member.dto.response.MessageBoxDto;
 import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 import com.icomfortableworld.domain.member.entity.PasswordHistory;
@@ -78,10 +82,18 @@ public class MemberServiceImpl implements MemberService {
 		}
 		String token = jwtProvider.createToken(memberModel.getUsername(), memberModel.getMemberRoleEnum());
 		List<Message> messageList = messageJpaRepository.findByToNameAndIsReadFalse(loginRequestDto.getUsername());
+		Map<String, List<String>> messages = new HashMap<>();
 		for (Message message : messageList) {
+			if (messages.containsKey(message.getFromName())) {
+				messages.put(message.getFromName(), new ArrayList<>(List.of(message.getContent())));
+			} else {
+				messages.get(message.getFromName()).add(message.getContent());
+			}
 			message.readMessage();
 		}
-		return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token, messageList);
+
+		MessageBoxDto messageBoxDto = new MessageBoxDto(memberModel.getUsername(), messages);
+		return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token, messageBoxDto);
 	}
 
 	@Override
