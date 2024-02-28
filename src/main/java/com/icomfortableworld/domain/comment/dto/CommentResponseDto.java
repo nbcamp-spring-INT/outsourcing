@@ -1,6 +1,7 @@
 package com.icomfortableworld.domain.comment.dto;
 
 import com.icomfortableworld.domain.comment.entity.Comment;
+import com.icomfortableworld.domain.comment.model.CommentModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +17,14 @@ import lombok.Setter;
 public class CommentResponseDto {
 
 	private String content;
+	private String nickname;
+	private Long commentId;
 
-	public static CommentResponseDto convertToDto(Comment comment) {
+	public static CommentResponseDto convertToDto(CommentModel commentmodel,String nickname) {
 		return CommentResponseDto.builder()
-			.content(comment.getContent())
+			.content(commentmodel.getContent())
+			.nickname(nickname)
+			.commentId(commentmodel.getCommentId())
 			.build();
 	}
 }

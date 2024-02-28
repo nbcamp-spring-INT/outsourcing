@@ -2,14 +2,21 @@ package com.icomfortableworld.domain.comment.service;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-
 import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
 import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
-import com.icomfortableworld.domain.comment.exception.dto.ExceptionDto;
-import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
 public interface CommentService {
-	void createComment (CommentRequestDto commentRequestDto, Long memberId);
+	void createComment(CommentRequestDto commentRequestDto, Long memberId);
+
+	// READ
+	List<CommentResponseDto> readComment(Long feedId, Long memberId);
+
+	// // UPDATE
+	// @Transactional
+	// CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto,
+	// Long memberId);
+
+	// DELETE
+	// void deleteComment(CommentRequestDto commentRequestDto, Long memberId);
 
 }

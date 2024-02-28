@@ -4,6 +4,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.icomfortableworld.common.entity.Timestamped;
+import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
 import com.icomfortableworld.domain.comment.model.CommentModel;
 
 import jakarta.persistence.Column;
@@ -47,6 +48,10 @@ public class Comment extends Timestamped {
 		this.memberId = memberId;
 		this.feedId = feedId;
 		this.content = content;
+	}
+
+	public Comment(CommentRequestDto commentRequestDto, Long memberId) {
+		super();
 	}
 
 	public CommentModel toModel() {

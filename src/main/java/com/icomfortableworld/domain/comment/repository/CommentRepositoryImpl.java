@@ -27,6 +27,21 @@ public class CommentRepositoryImpl implements CommentRepository {
 
 		return commentJpaRepository.save(comment).toModel();
 	}
+
+	// @Override
+	// public CommentModel delete(Comment comment) {
+	// 	return null;
+	// }
+
+	@Override
+	public List<Comment> findAllByFeedId(Long feedId) {
+		return null;
+	}
+
+	@Override
+	public Optional<Object> findByCommentId(Long commentId) {
+		return Optional.empty();
+	}
 }
 
 
