@@ -18,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 @Repository
 public class FeedRepositoryImpl implements FeedRepository {
 	private final FeedJpaRepository feedJpaRepository;
-	private final CommentRepository commentRepository;
-
 	@Override
 	public Feed save(Feed feed) {
 		return feedJpaRepository.save(feed);
@@ -68,7 +66,6 @@ public class FeedRepositoryImpl implements FeedRepository {
 		if (!feed.getMemberId().equals(memberId) && authority!=MemberRoleEnum.ADMIN) {
 			throw new CustomFeedException(FeedErrorCode.FEED_ERROR_CODE_ID_MISMATCH);
 		}
-		commentRepository.deleteByFeedId(feedId);
 		feedJpaRepository.deleteById(feedId);
 	}
 

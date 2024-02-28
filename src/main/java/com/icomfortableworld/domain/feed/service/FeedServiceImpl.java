@@ -177,6 +177,7 @@ public class FeedServiceImpl implements FeedService {
 	@Override
 	public void deleteFeed(Long feedId, Long memberId, MemberRoleEnum authority) {
 		memberRepository.findByIdOrElseThrow(memberId);
+		commentRepository.deleteByFeedId(feedId);
 
 		feedRepository.deleteById(feedId, memberId, authority);
 	}
