@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
 import com.icomfortableworld.domain.comment.entity.Comment;
 import com.icomfortableworld.domain.comment.model.CommentModel;
 import com.icomfortableworld.domain.feed.repository.FeedRepository;
@@ -32,15 +33,17 @@ public class CommentRepositoryImpl implements CommentRepository {
 		return commentJpaRepository.findByFeedId(feedId);
 	}
 
-	// @Override
-	// public void update(Long commentId, CommentRequestDto commentRequestDto) {
-	//
-	// }
+	@Override
+	public void update(Long commentId, CommentRequestDto commentRequestDto) {
+		return commentRequestDto.getContent();
+	}
 
-	// @Override
-	// public CommentModel delete(Comment comment) {
-	// 	return commentJpaRepository.delete(comment);
-	// }
+	@Override
+	public CommentModel delete(Comment comment) {
+		return commentJpaRepository.delete(comment);
+
+
+	}
 }
 
 

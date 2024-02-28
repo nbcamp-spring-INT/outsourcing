@@ -52,15 +52,16 @@ public class CommentController {
 		return CommonResponseDto.of(HttpStatus.OK, "조회되었습니다.", commentResponseDtos);
 	}
 
-	// @PatchMapping("/{commentId}")
-	// public CommentResponseDto updateComment(
-	// 	@PathVariable Long commentId,
-	// 	@Valid @RequestBody CommentRequestDto commentRequestDto,
-	// 	@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-	//
-	// 	return commentService.updateComment(commentId, commentRequestDto, memberDetails.getMember().getMemberId());
-	//
-	// }
+	@PatchMapping("/{commentId}")
+	public CommentResponseDto updateComment(
+		@PathVariable Long commentId,
+		@Valid @RequestBody CommentRequestDto commentRequestDto,
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+
+		commentService.updateComment(commentId, commentRequestDto, memberDetails.getMember().getMemberId());
+		return CommonResponseDto.of(HttpStatus.OK, "수정되었습니다.",commentResponseDto)
+
+	}
 	// @DeleteMapping("/{commentId}")
 	// public deleteComment(
 	// 	@PathVariable Long commentId,

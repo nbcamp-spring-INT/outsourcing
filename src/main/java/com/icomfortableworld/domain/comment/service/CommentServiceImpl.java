@@ -14,7 +14,9 @@ import com.icomfortableworld.domain.feed.model.FeedModel;
 import com.icomfortableworld.domain.feed.repository.FeedRepository;
 import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
+import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,10 +29,11 @@ public class CommentServiceImpl implements CommentService {
 	// CREATE
 	@Override
 	public void createComment(CommentRequestDto commentRequestDto, Long memberId) {
+
 		memberRepository.findByIdOrElseThrow(memberId);
-		CommentModel commentModel = commentRepository.save(new Comment(commentRequestDto, memberId));
-		Comment saveComment = new Comment(memberId, commentRequestDto.getFeedId(), commentRequestDto.getContent());
-		commentRepository.save(saveComment);
+		Comment comment = new Comment(memberId, commentRequestDto.getFeedId(), commentRequestDto.getContent());
+		commentRepository.save(comment);
+
 
 	}
 
@@ -49,23 +52,30 @@ public class CommentServiceImpl implements CommentService {
 		return commentResponseDtos;
 	}
 
-	// @Transactional
-	// @Override
-	// public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, Long memberId) {
-	// 	MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
-	// 	CommentModel commentModel = commentRepository.findByIdOrElseThrow(commentId);
-	//
-	// 	commentRepository.update(commentId, commentRequestDto);
-	//
-	// 	return new CommentResponseDto(commentModel, commentModel.getMember().getNickname());
-	// }
-	//
-	// public void deleteComment(Long commentId, Long feedId, Long memberId) {
-	// 	MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
-	// 	FeedModel feedModel = feedRepository.findByIdOrElseThrow(feedId);
-	//
-	// 	commentRepository.delete(CommentModel.builder().build());
-	// }
+	@Override
+	public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, Long memberId) {
+		return null;
+	}
+
+
+	// UPDATE
+	public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, MemberDetailsImpl memberDetails) {
+		Comment comment = (Comment)commentRepository.findByFeedId(commentRequestDto.getFeedId());
+
+		if(!(comment.getMemberId() == memberDetails.getMember().getMemberId())) {
+			throw new IllegalArgumentException("등록된 사용자가 아닙니다.");
+		}
+
+		comment.update(commentRequestDto);
+		return new CommentResponseDto(comment, memberDetails.getMember().getNickname());
+	}
+
+	// DELETE
+	public void deleteComment(CommentRequestDto commentRequestDto Long memberId) {
+		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
+
+		commentRepository.delete(comment);
+	}
 }
 
 

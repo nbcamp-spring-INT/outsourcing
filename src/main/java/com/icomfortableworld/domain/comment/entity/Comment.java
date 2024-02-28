@@ -27,7 +27,7 @@ import lombok.Setter;
 @Setter
 @SQLDelete(sql = "update comment set deleted date = NOW() where id=?")
 @SQLRestriction(value = "deleted_date is NULL")
-@Table(name = "comment")
+@Table(name = "comments")
 public class Comment extends Timestamped {
 
 	@Id
@@ -50,10 +50,6 @@ public class Comment extends Timestamped {
 		this.content = content;
 	}
 
-	public Comment(CommentRequestDto commentRequestDto, Long memberId) {
-		super();
-	}
-
 	public CommentModel toModel() {
 		return CommentModel.builder()
 			.memberId(memberId)
@@ -63,6 +59,10 @@ public class Comment extends Timestamped {
 			.updatedDate(this.getUpdatedDate())
 			.deletedDate(this.getDeletedDate())
 			.build();
+	}
+
+	public void update(CommentRequestDto commentRequestDto) {
+		this.content = commentRequestDto.getContent();
 	}
 }
 

@@ -2,6 +2,7 @@ package com.icomfortableworld.domain.comment.repository;
 
 import java.util.List;
 
+import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
 import com.icomfortableworld.domain.comment.entity.Comment;
 import com.icomfortableworld.domain.comment.model.CommentModel;
 
@@ -10,7 +11,8 @@ public interface CommentRepository {
 
 	List<CommentModel> findByFeedId(Long feedId);
 
-	// CommentModel delete(Comment comment);
 
+	CommentModel delete(Comment comment);
 
+	void update(Long commentId, CommentRequestDto commentRequestDto);
 }

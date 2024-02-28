@@ -19,11 +19,9 @@ public interface CommentService {
 	List<CommentResponseDto> readComment(Long feedId, Long memberId);
 
 	// UPDATE
-	//
-	// CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto,
-	// Long memberId);
+	CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, Long memberId);
 
 	//DELETE
-	// void deleteComment(CommentRequestDto commentRequestDto, Long memberId);
+	void deleteComment(CommentRequestDto commentRequestDto, Long memberId);
 
 }
