@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SQLDelete(sql = "update feed set deleted_date = NOW() where feed_id=?")
+@SQLDelete(sql = "update feeds set deleted_date = NOW() where feed_id=?")
 @SQLRestriction(value = "deleted_date is NULL")
 @NoArgsConstructor
 @AllArgsConstructor
