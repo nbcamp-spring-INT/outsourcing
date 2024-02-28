@@ -1,4 +1,4 @@
-package com.icomfortableworld.global.exception.member;
+package com.icomfortableworld.domain.member.exception;
 
 import lombok.Getter;
 

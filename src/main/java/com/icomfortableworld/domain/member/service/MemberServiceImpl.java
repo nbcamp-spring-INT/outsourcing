@@ -16,11 +16,11 @@ import com.icomfortableworld.domain.member.dto.response.MemberUpdateResponseDto;
 import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 import com.icomfortableworld.domain.member.entity.PasswordHistory;
+import com.icomfortableworld.domain.member.exception.CustomMemberException;
+import com.icomfortableworld.domain.member.exception.MemberErrorCode;
 import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
 import com.icomfortableworld.domain.member.repository.PasswordHistoryRepository;
-import com.icomfortableworld.global.exception.member.CustomMemberException;
-import com.icomfortableworld.global.exception.member.MemberErrorCode;
 import com.icomfortableworld.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;

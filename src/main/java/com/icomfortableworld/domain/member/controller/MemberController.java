@@ -18,9 +18,9 @@ import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberUpdateResponseDto;
+import com.icomfortableworld.domain.member.exception.CustomMemberException;
+import com.icomfortableworld.domain.member.exception.MemberErrorCode;
 import com.icomfortableworld.domain.member.service.MemberService;
-import com.icomfortableworld.global.exception.member.CustomMemberException;
-import com.icomfortableworld.global.exception.member.MemberErrorCode;
 import com.icomfortableworld.jwt.JwtProvider;
 import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
