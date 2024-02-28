@@ -42,7 +42,6 @@ public class CommentRepositoryImpl implements CommentRepository {
 	public CommentModel delete(Comment comment) {
 		return commentJpaRepository.delete(comment);
 
-
 	}
 }
 

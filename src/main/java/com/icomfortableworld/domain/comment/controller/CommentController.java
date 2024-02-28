@@ -62,13 +62,14 @@ public class CommentController {
 		return CommonResponseDto.of(HttpStatus.OK, "수정되었습니다.",commentResponseDto)
 
 	}
-	// @DeleteMapping("/{commentId}")
-	// public deleteComment(
-	// 	@PathVariable Long commentId,
-	// 	@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-	//
-	// 	return commentService.deleteComment(commentId, memberDetails);
-	// }
+	@DeleteMapping("/{commentId}")
+	public deleteComment(
+		@PathVariable Long commentId,
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+
+		commentService.deleteComment(commentId, memberDetails.getMember().getMemberId());
+		return CommonResponseDto.of(HttpStatus.OK, "삭제되었습니다.", CommonResponseDto)
+	}
 
 }
 
