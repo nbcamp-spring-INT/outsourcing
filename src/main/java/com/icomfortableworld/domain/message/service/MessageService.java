@@ -6,7 +6,4 @@ import java.util.List;
 
 public interface MessageService {
     void sendMessage(MessageRequestDto requestDto, Long memberId);
-
-    List<MessageResponseDto> getMessageList(Long memberId);
-
 }

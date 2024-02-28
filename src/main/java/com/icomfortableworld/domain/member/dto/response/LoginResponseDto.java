@@ -11,4 +11,5 @@ public class LoginResponseDto {
 	private String username;
 	private MemberRoleEnum memberRoleEnum;
 	private String token;
+	private MessageBoxDto messageBoxDto;
 }

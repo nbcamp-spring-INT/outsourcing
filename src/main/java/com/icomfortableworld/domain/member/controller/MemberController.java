@@ -18,6 +18,7 @@ import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberUpdateResponseDto;
+import com.icomfortableworld.domain.member.dto.response.MessageBoxDto;
 import com.icomfortableworld.domain.member.exception.CustomMemberException;
 import com.icomfortableworld.domain.member.exception.MemberErrorCode;
 import com.icomfortableworld.domain.member.service.MemberService;
@@ -42,11 +43,11 @@ public class MemberController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<CommonResponseDto<Void>> login(@Valid @RequestBody LoginRequestDto loginRequestDto,
+	public ResponseEntity<CommonResponseDto<MessageBoxDto>> login(@Valid @RequestBody LoginRequestDto loginRequestDto,
 		HttpServletResponse response) {
 		LoginResponseDto loginResponseDto = memberService.login(loginRequestDto);
 		response.addHeader(JwtProvider.AUTHORIZATION_HEADER, loginResponseDto.getToken());
-		return CommonResponseDto.of(HttpStatus.OK, "로그인 성공", null);
+		return CommonResponseDto.of(HttpStatus.OK, "로그인 성공", loginResponseDto.getMessageBoxDto());
 	}
 
 	@PostMapping("/logout")

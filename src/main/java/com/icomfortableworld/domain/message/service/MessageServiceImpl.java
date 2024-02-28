@@ -22,14 +22,7 @@ public class MessageServiceImpl implements MessageService {
 
     private final MessageJpaRepository messageRepository;
     private final MemberRepository memberRepository;
-    @Override
-    public List<MessageResponseDto> getMessageList(Long memberId) {
-        List<Message> messageList = messageRepository.findByReceiverId(memberId);
 
-        return messageList.stream()
-                .map(MessageResponseDto::new)
-                .collect(Collectors.toList());
-    }
     @Override
     public void sendMessage(MessageRequestDto requestDto, Long senderId) {
         Long receiverId = requestDto.getReceiverId();
@@ -38,10 +31,11 @@ public class MessageServiceImpl implements MessageService {
             throw new IllegalArgumentException("자신에게 메시지를 보낼 수 없습니다.");
         }
         MemberModel receiver = memberRepository.findByIdOrElseThrow(receiverId);
+        MemberModel sender = memberRepository.findByIdOrElseThrow(senderId);
 
         Message message = new Message();
-        message.setSenderId(senderId);
-        message.setReceiverId(receiverId);
+        message.setFromName(sender.getUsername());
+        message.setToName(receiver.getUsername());
         message.setContent(requestDto.getContent());
 
         messageRepository.save(message);

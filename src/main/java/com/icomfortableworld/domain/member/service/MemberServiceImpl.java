@@ -1,5 +1,9 @@
 package com.icomfortableworld.domain.member.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +17,7 @@ import com.icomfortableworld.domain.member.dto.request.SignupRequestDto;
 import com.icomfortableworld.domain.member.dto.response.LoginResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberResponseDto;
 import com.icomfortableworld.domain.member.dto.response.MemberUpdateResponseDto;
+import com.icomfortableworld.domain.member.dto.response.MessageBoxDto;
 import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
 import com.icomfortableworld.domain.member.entity.PasswordHistory;
@@ -21,6 +26,8 @@ import com.icomfortableworld.domain.member.exception.MemberErrorCode;
 import com.icomfortableworld.domain.member.model.MemberModel;
 import com.icomfortableworld.domain.member.repository.MemberRepository;
 import com.icomfortableworld.domain.member.repository.PasswordHistoryRepository;
+import com.icomfortableworld.domain.message.entity.Message;
+import com.icomfortableworld.domain.message.repository.MessageJpaRepository;
 import com.icomfortableworld.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +40,7 @@ public class MemberServiceImpl implements MemberService {
 	private final PasswordHistoryRepository passwordHistoryRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final FollowRepository followRepository;
+	private final MessageJpaRepository messageJpaRepository;
 
 	private final JwtProvider jwtProvider;
 	@Value("${admin_token}")
@@ -73,7 +81,20 @@ public class MemberServiceImpl implements MemberService {
 			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_PASSWORD_MISMATCH);
 		}
 		String token = jwtProvider.createToken(memberModel.getUsername(), memberModel.getMemberRoleEnum());
-		return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token);
+		List<Message> messageList = messageJpaRepository.findByToNameAndIsReadFalse(loginRequestDto.getUsername());
+		Map<String, List<String>> massageBox = new HashMap<>();
+
+		for (Message message : messageList) {
+			if (massageBox.containsKey(message.getFromName())) {
+				massageBox.get(message.getFromName()).add(message.getContent());
+			} else {
+				massageBox.put(message.getFromName(), new ArrayList<>(List.of(message.getContent())));
+			}
+			message.readMessage();
+		}
+
+		MessageBoxDto messageBoxDto = new MessageBoxDto(memberModel.getUsername(), massageBox);
+		return new LoginResponseDto(memberModel.getUsername(), memberModel.getMemberRoleEnum(), token, messageBoxDto);
 	}
 
 	@Override
