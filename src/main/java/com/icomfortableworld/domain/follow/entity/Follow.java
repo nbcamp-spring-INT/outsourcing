@@ -1,9 +1,6 @@
 package com.icomfortableworld.domain.follow.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Table(name = "follows")
 public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
