@@ -87,7 +87,7 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional(readOnly = true)
 	public MemberResponseDto getMemeber(Long memberId) {
 		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
-		Long followerCount = getCalcCount(memberId);
+		Long followerCount = getFollowingCount(memberId);
 		return MemberResponseDto.from(memberModel, followerCount);
 	}
 
@@ -110,7 +110,7 @@ public class MemberServiceImpl implements MemberService {
 			memberRepository.updateMember(memberId, newNickname, newIntroduction, newPassword));
 	}
 
-	private Long getCalcCount(Long memberId) {
+	private Long getFollowingCount(Long memberId) {
 		return (long)followRepository.findByFromId(memberId).size();
 	}
 }
