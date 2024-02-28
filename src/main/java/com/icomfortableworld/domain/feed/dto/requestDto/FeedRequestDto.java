@@ -1,4 +1,4 @@
-package com.icomfortableworld.domain.feed.dto;
+package com.icomfortableworld.domain.feed.dto.requestDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

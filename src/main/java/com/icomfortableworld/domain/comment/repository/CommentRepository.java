@@ -4,17 +4,24 @@ import java.util.List;
 import java.util.Optional;
 
 import com.icomfortableworld.domain.comment.entity.Comment;
+import com.icomfortableworld.domain.comment.model.CommentModel;
 
 public interface CommentRepository {
-	Comment save(Comment comment);
+	CommentModel save(Comment comment);
 
-	List<Comment> findAll();
+	// void delete(Comment comment);
+	//
+	// List<Comment> findAll();
+	//
+	// List<Comment> findAllByfeed_FeedId(Long feedId);
+	//
+	// Optional<Object> findById(Long commentId);
+	//
+	// String getContent(Comment comment);
+	//
+	//
+	//
 
-	List<Comment> findAllByfeed_FeedId(Long feedId);
 
-	Optional<Object> findById(Long commentId);
-
-	void delete(Comment comment);
-
-	String getContent(Comment comment);
+	// 함수 원형
 }

@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeedModel {
-    private Long feedId;
-    private Long memberId;
-    private String content;
-    private Long likeCount;
-    private LocalDateTime createdDate;
-    private LocalDateTime updatedDate;
-    private LocalDateTime deletedDate;
+	private Long feedId;
+	private Long memberId;
+	private String content;
+	private Long likeCount;
+	private LocalDateTime createdDate;
+	private LocalDateTime updatedDate;
+	private LocalDateTime deletedDate;
 }

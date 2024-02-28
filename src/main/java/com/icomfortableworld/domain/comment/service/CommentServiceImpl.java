@@ -23,49 +23,32 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentServiceImpl implements CommentService {
 
 	private final MemberRepository memberRepository;
 	private final FeedRepository feedRepository;
 	private final CommentRepository commentRepository;
 
-	@Transactional
-	public CommentResponseDto createComment(Long memberId,Long feedId, CommentRequestDto commentRequestDto,
-		Principal principal) {
-
-		Member member = (Member)memberRepository.findById(memberId)
-			.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-
-		Feed feed = (Feed)feedRepository.findById(feedId)
-			.orElseThrow(() -> new CustomException(NOT_FOUND_FEED));
-
-		Comment comment = Comment.builder()
-			.member(member)
-			.feed(feed)
-			.content(commentRequestDto.getContent())
-			.build();
-
-		Comment savedComment = commentRepository.save(comment);
-
-		return CommentResponseDto.convertToDto(savedComment);
-	}
-
-	@Transactional
-	public void deleteComment(Long memberId, Long commentId, Principal principal) {
-
-		Member member = memberRepository.findById(memberId)
-			.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-
-		Comment comment = (Comment)commentRepository.findById(commentId)
-			.orElseThrow(() -> new CustomException(NOT_FOUND_COMMENT));
-
-		commentRepository.delete(comment);
-	}
-
 	@Override
-	public ResponseEntity<CommentResponseDto> createComment(CommentRequestDto commentRequestDto, Long memberId) {
-		return null;
+	public void createComment(CommentRequestDto commentRequestDto, Long memberId) {
+
+		memberRepository.findByIdOrElseThrow(memberId);
+		feedRepository.findByIdOrElseThrow(commentRequestDto.getFeedId());
+		Comment comment = new Comment(memberId, commentRequestDto.getFeedId(), commentRequestDto.getContent());
+		commentRepository.save(comment);
+
 	}
+
+	// @Transactional
+	// public void deleteComment(Long memberId, Long commentId, Principal principal) {
+	//
+	// 	memberRepository.findByIdOrElseThrow(memberId);
+	// 	Comment comment = (Comment)commentRepository.findById(commentId)
+	// 		.orElseThrow(() -> new CustomException(NOT_FOUND_COMMENT));
+	//
+	// 	commentRepository.delete(comment);
+	// }
 }
 
 

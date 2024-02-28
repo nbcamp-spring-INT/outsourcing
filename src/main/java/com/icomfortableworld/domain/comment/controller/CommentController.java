@@ -1,26 +1,18 @@
 package com.icomfortableworld.domain.comment.controller;
 
-import java.security.Principal;
-import java.util.List;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.icomfortableworld.common.dto.CommonResponseDto;
 import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
-import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
-import com.icomfortableworld.domain.comment.exception.dto.ExceptionDto;
 import com.icomfortableworld.domain.comment.service.CommentService;
 import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -29,24 +21,32 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 	private final CommentService commentService;
 
-	@PostMapping("")
-	public ResponseEntity<CommentResponseDto> createComment(
-		@PathVariable Long feedId,
+	@PostMapping
+	public ResponseEntity<CommonResponseDto<Void>> createComment(
+
 		@RequestBody CommentRequestDto commentRequestDto,
-		Principal principal
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails
 	) {
-		CommentResponseDto createdComment = commentService.createComment(feedId, commentRequestDto,
-			principal);
-		return ResponseEntity.ok(createdComment);
+		commentService.createComment(commentRequestDto, memberDetails.getMember().getMemberId());
+		return CommonResponseDto.of(HttpStatus.OK, "작성되었습니다.", null);
+
 	}
 
-	@DeleteMapping("/{commentId}")
-	public void deleteComment(
-		@PathVariable Long commentId,
-		Principal principal
-	) {
-		commentService.deleteComment(commentId, principal);
-	}
+	// @GetMapping("")
+	// public ResponseEntity<CommonResponseDto<List<CommonResponseDto>>> readComment(@Pathvariable Long feedId) {
+	// 	List<CommentResponseDto> comments = commentService.readComment(feedId);
+	// 	return CommonResponseDto.of(HttpStatus.OK,"조회되었습니다.",comments)
+	// }
+
 }
+
+// @DeleteMapping("/{commentId}")
+// public void deleteComment(
+// 	@PathVariable Long commentId,
+// 	@AuthenticationPrincipal MemberDetailsImpl memberDetails
+// ) {
+// 	commentService.deleteComment(commentId);
+// }
+
 
 

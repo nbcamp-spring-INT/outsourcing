@@ -1,10 +1,10 @@
 package com.icomfortableworld.domain.feed.service;
 
-import org.springframework.security.core.userdetails.User;
-
-import com.icomfortableworld.domain.feed.dto.FeedRequestDto;
-import com.icomfortableworld.domain.member.entity.Member;
+import com.icomfortableworld.domain.feed.dto.requestDto.FeedRequestDto;
+import com.icomfortableworld.domain.feed.dto.responseDto.FeedResponseDto;
 
 public interface FeedService {
-    void createFeed(FeedRequestDto requestDto, Long memberId);
+	void createFeed(FeedRequestDto requestDto, Long memberId);
+
+	FeedResponseDto updateFeed(Long feedId, FeedRequestDto requestDto, Long memberId);
 }

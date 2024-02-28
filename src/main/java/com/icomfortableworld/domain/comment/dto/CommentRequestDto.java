@@ -14,8 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentRequestDto extends Timestamped {
+public class CommentRequestDto {
 
 	@NotBlank
 	private String content;
+	private Long feedId;
 }

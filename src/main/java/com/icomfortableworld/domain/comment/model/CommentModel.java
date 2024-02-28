@@ -2,6 +2,9 @@ package com.icomfortableworld.domain.comment.model;
 
 import java.time.LocalDateTime;
 
+import lombok.Builder;
+
+@Builder
 public class CommentModel {
 	private Long commentId;
 	private Long feedId;

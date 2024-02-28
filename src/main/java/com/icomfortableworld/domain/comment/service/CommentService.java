@@ -10,6 +10,6 @@ import com.icomfortableworld.domain.comment.exception.dto.ExceptionDto;
 import com.icomfortableworld.jwt.security.MemberDetailsImpl;
 
 public interface CommentService {
-	ResponseEntity<CommentResponseDto> createComment(CommentRequestDto commentRequestDto, Long memberId);
+	void createComment (CommentRequestDto commentRequestDto, Long memberId);
 
 }

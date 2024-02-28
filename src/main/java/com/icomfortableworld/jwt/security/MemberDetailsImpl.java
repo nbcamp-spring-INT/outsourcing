@@ -7,22 +7,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.icomfortableworld.domain.member.entity.Member;
 import com.icomfortableworld.domain.member.entity.MemberRoleEnum;
+import com.icomfortableworld.domain.member.model.MemberModel;
 
 import lombok.Getter;
 
 @Getter
 public class MemberDetailsImpl implements UserDetails {
 
-	private final Member member;
+	private final MemberModel member;
 
-	public MemberDetailsImpl(Member member) {
+	public MemberDetailsImpl(MemberModel member) {
 		this.member = member;
-	}
-
-	public Member getMember() {
-		return member;
 	}
 
 	@Override
