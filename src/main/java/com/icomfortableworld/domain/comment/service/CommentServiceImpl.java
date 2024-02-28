@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
+import com.icomfortableworld.domain.comment.dto.CommentRequestUpdateDto;
 import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
 import com.icomfortableworld.domain.comment.entity.Comment;
 import com.icomfortableworld.domain.comment.model.CommentModel;
@@ -27,10 +28,11 @@ public class CommentServiceImpl implements CommentService {
 	// CREATE
 	@Override
 	public void createComment(CommentRequestDto commentRequestDto, Long memberId) {
+
 		memberRepository.findByIdOrElseThrow(memberId);
-		CommentModel commentModel = commentRepository.save(new Comment(commentRequestDto, memberId));
-		Comment saveComment = new Comment(memberId, commentRequestDto.getFeedId(), commentRequestDto.getContent());
-		commentRepository.save(saveComment);
+		Comment comment = new Comment(memberId, commentRequestDto.getFeedId(), commentRequestDto.getContent());
+		commentRepository.save(comment);
+
 
 	}
 
@@ -49,22 +51,21 @@ public class CommentServiceImpl implements CommentService {
 		return commentResponseDtos;
 	}
 
-	// @Transactional
-	// @Override
-	// public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, Long memberId) {
+	// UPDATE
+	public CommentResponseDto updateComment(Long commentId, CommentRequestUpdateDto commentRequestUpdateDto, Long memberId) {
+
+		MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
+		commentRepository.findByIdOrElseThrow(commentId);
+		CommentModel commentModel = commentRepository.update(commentId, commentRequestUpdateDto);
+		return CommentResponseDto.convertToDto(commentModel,memberModel.getNickname());
+
+	}
+
+	// DELETE
+	// public void deleteComment(CommentRequestDto commentRequestDto, Long memberId) {
 	// 	MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
-	// 	CommentModel commentModel = commentRepository.findByIdOrElseThrow(commentId);
 	//
-	// 	commentRepository.update(commentId, commentRequestDto);
-	//
-	// 	return new CommentResponseDto(commentModel, commentModel.getMember().getNickname());
-	// }
-	//
-	// public void deleteComment(Long commentId, Long feedId, Long memberId) {
-	// 	MemberModel memberModel = memberRepository.findByIdOrElseThrow(memberId);
-	// 	FeedModel feedModel = feedRepository.findByIdOrElseThrow(feedId);
-	//
-	// 	commentRepository.delete(CommentModel.builder().build());
+	// 	commentRepository.delete(comment);
 	// }
 }
 

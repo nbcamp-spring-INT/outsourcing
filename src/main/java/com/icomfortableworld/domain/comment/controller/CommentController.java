@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.icomfortableworld.common.dto.CommonResponseDto;
 import com.icomfortableworld.domain.comment.dto.CommentRequestDto;
+import com.icomfortableworld.domain.comment.dto.CommentRequestUpdateDto;
 import com.icomfortableworld.domain.comment.dto.CommentResponseDto;
 import com.icomfortableworld.domain.comment.service.CommentService;
 import com.icomfortableworld.jwt.security.MemberDetailsImpl;
@@ -52,21 +54,19 @@ public class CommentController {
 		return CommonResponseDto.of(HttpStatus.OK, "조회되었습니다.", commentResponseDtos);
 	}
 
-	// @PatchMapping("/{commentId}")
-	// public CommentResponseDto updateComment(
-	// 	@PathVariable Long commentId,
-	// 	@Valid @RequestBody CommentRequestDto commentRequestDto,
-	// 	@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-	//
-	// 	return commentService.updateComment(commentId, commentRequestDto, memberDetails.getMember().getMemberId());
-	//
-	// }
+	@PutMapping("/{commentId}")
+	public ResponseEntity<CommonResponseDto<CommentResponseDto>> updateComment(@PathVariable Long commentId,@RequestBody CommentRequestUpdateDto commentRequestUpdateDto,
+		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+
+		CommentResponseDto commentResponseDto = commentService.updateComment(commentId, commentRequestUpdateDto, memberDetails.getMember().getMemberId());
+		return CommonResponseDto.of(HttpStatus.OK, "수정되었습니다.", commentResponseDto);
+
+	}
 	// @DeleteMapping("/{commentId}")
-	// public deleteComment(
-	// 	@PathVariable Long commentId,
-	// 	@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+	// public deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 	//
-	// 	return commentService.deleteComment(commentId, memberDetails);
+	// 	commentService.deleteComment(commentId, memberDetails.getMember().getMemberId());
+	// 	return CommonResponseDto.of(HttpStatus.OK, "삭제되었습니다.", CommonResponseDto);
 	// }
 
 }

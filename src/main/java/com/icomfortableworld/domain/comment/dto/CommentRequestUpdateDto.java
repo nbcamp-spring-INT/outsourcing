@@ -12,10 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentRequestDto {
-
+public class CommentRequestUpdateDto {
 	@NotBlank
 	private String content;
-	private Long feedId;
-
 }
