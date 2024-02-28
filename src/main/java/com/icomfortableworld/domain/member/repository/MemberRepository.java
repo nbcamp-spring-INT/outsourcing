@@ -17,5 +17,7 @@ public interface MemberRepository {
 
 	Optional<MemberModel> findByEmail(String email);
 
-	void save(Member member);
+	MemberModel save(Member member);
+
+	MemberModel updateMember(Long memberId, String newNickname, String newIntroduction, String newPassword);
 }
