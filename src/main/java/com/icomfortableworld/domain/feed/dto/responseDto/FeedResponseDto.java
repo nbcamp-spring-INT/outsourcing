@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-//좋아요 개수 필요
 @Getter
 public class FeedResponseDto {
 	private Long feedId;
