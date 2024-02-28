@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MessageJpaRepository extends JpaRepository <Message,Long> {
-    List<Message> findByReceiverId(Long receiverId);
+
+    List<Message> findByToNameAndReadFalse(String username);
 
 }
