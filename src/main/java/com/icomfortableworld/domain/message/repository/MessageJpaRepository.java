@@ -1,0 +1,14 @@
+package com.icomfortableworld.domain.message.repository;
+
+import com.icomfortableworld.domain.message.entity.Message;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface MessageJpaRepository extends JpaRepository<Message,Long> {
+
+    List<Message> findByToNameAndIsReadFalse(String username);
+
+}
